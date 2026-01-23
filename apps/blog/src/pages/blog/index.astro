@@ -22,7 +22,7 @@ function formatDate(date: Date): string {
 
 <details open>
   <summary>blog</summary>
-<pre set:html={sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/posts/${post.id}">${post.data.title}</a>`).join('\n')} />
+<pre set:html={sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/blog/${post.id}">${post.data.title}</a>`).join('\n')} />
 </details>
 </body>
 </html>

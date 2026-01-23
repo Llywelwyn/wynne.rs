@@ -75,7 +75,7 @@ function extractDomain(url: string): string {
 <details open>
   <summary>blog</summary>
 <pre set:html={[
-  ...sorted.slice(0, 10).map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/posts/${post.id}">${post.data.title}</a>`),
+  ...sorted.slice(0, 10).map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/blog/${post.id}">${post.data.title}</a>`),
   ...(sorted.length > 10 ? [`<a href="/blog/">+${sorted.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
