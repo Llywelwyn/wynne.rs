@@ -5,6 +5,7 @@ import yaml from 'js-yaml';
 import bookmarksRaw from '../data/bookmarks.yaml?raw';
 import fs from 'node:fs';
 import path from 'node:path';
+import { getApprovedEntries, type GuestbookEntry } from '../lib/db';
 
 interface Bookmark {
   date: string;
@@ -34,6 +35,13 @@ const txtFiles: TxtFile[] = fs.existsSync(txtDir)
       })
       .sort((a, b) => b.mtime.getTime() - a.mtime.getTime())
   : [];
+
+let guestbookEntries: GuestbookEntry[] = [];
+try {
+  guestbookEntries = await getApprovedEntries();
+} catch {
+  // DB not available during dev without env vars
+}
 
 function formatDate(date: Date): string {
   const d = String(date.getDate()).padStart(2, '0');
@@ -78,5 +86,47 @@ function extractDomain(url: string): string {
   <summary>bookmarks</summary>
 <pre set:html={bookmarks.map(b => `<span class="muted">${formatBookmarkDate(b.date)}</span>    <a href="${b.url}">${b.title}</a> <span class="muted">(${extractDomain(b.url)})</span>`).join('\n')} />
 </details>
+
+<details open>
+  <summary>guestbook</summary>
+<pre set:html={guestbookEntries.length > 0
+    ? guestbookEntries.map(e => `<span class="muted">${formatDate(e.createdAt)}</span>    ${e.url ? `<a href="${e.url}">${e.name}</a>` : e.name}: ${e.message}`).join('\n')
+    : '<span class="muted">no entries yet</span>'} />
+  <form id="guestbook-form">
+    <input type="text" name="name" placeholder="name" required maxlength="100" />
+    <input type="text" name="url" placeholder="url (optional)" maxlength="200" />
+    <textarea name="message" placeholder="message" required maxlength="500"></textarea>
+    <button type="submit">sign</button>
+  </form>
+  <div id="guestbook-status"></div>
+</details>
+
+<script>
+  const form = document.getElementById('guestbook-form') as HTMLFormElement;
+  const status = document.getElementById('guestbook-status')!;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+
+    try {
+      const res = await fetch('/api/guestbook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        status.textContent = 'thanks! your message is pending approval.';
+        form.reset();
+      } else {
+        const err = await res.json();
+        status.textContent = err.error || 'something went wrong';
+      }
+    } catch {
+      status.textContent = 'failed to submit';
+    }
+  });
+</script>
 </body>
 </html>

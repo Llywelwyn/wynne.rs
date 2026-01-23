@@ -1,50 +1,29 @@
-import { createClient } from '@libsql/client';
+import { db, Guestbook, eq, desc } from 'astro:db';
 
-export const db = createClient({
-  url: import.meta.env.TURSO_DATABASE_URL,
-  authToken: import.meta.env.TURSO_AUTH_TOKEN,
-});
-
-export interface GuestbookEntry {
-  id: number;
-  name: string;
-  message: string;
-  url: string | null;
-  created_at: string;
-  approved: number;
-}
+export type GuestbookEntry = typeof Guestbook.$inferSelect;
 
 export async function getApprovedEntries(): Promise<GuestbookEntry[]> {
-  const result = await db.execute(
-    'SELECT * FROM guestbook WHERE approved = 1 ORDER BY created_at DESC'
-  );
-  return result.rows as unknown as GuestbookEntry[];
+  return db.select().from(Guestbook).where(eq(Guestbook.approved, true)).orderBy(desc(Guestbook.createdAt));
 }
 
 export async function getPendingEntries(): Promise<GuestbookEntry[]> {
-  const result = await db.execute(
-    'SELECT * FROM guestbook WHERE approved = 0 ORDER BY created_at DESC'
-  );
-  return result.rows as unknown as GuestbookEntry[];
+  return db.select().from(Guestbook).where(eq(Guestbook.approved, false)).orderBy(desc(Guestbook.createdAt));
 }
 
 export async function createEntry(name: string, message: string, url: string | null): Promise<void> {
-  await db.execute({
-    sql: 'INSERT INTO guestbook (name, message, url) VALUES (?, ?, ?)',
-    args: [name, message, url],
+  await db.insert(Guestbook).values({
+    name,
+    message,
+    url,
+    createdAt: new Date(),
+    approved: false,
   });
 }
 
 export async function approveEntry(id: number): Promise<void> {
-  await db.execute({
-    sql: 'UPDATE guestbook SET approved = 1 WHERE id = ?',
-    args: [id],
-  });
+  await db.update(Guestbook).set({ approved: true }).where(eq(Guestbook.id, id));
 }
 
 export async function deleteEntry(id: number): Promise<void> {
-  await db.execute({
-    sql: 'DELETE FROM guestbook WHERE id = ?',
-    args: [id],
-  });
+  await db.delete(Guestbook).where(eq(Guestbook.id, id));
 }
