@@ -18,8 +18,8 @@ export async function GET(context: APIContext) {
 
   const urls = [
     '/',
-    '/blog',
-    ...posts.map(post => `/blog/${post.id}`),
+    '/md',
+    ...posts.map(post => `/md/${post.id}`),
     '/txt',
     ...txtFiles.map(txt => `/txt/${txt}`),
     '/bookmarks',
