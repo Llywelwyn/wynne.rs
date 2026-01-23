@@ -4,17 +4,23 @@ body {
   padding: 1rem;
 }
 
-.aside {
+.left, .right {
   display: block;
   font-size: 0.9rem;
 }
 
 @media (min-width: 63rem) {
-  .aside {
+  .left, .right {
     display: inline;
-    float: right;
     position: relative;
     width: 10rem;
+  }
+  .left {
+    float: left;
+    margin-left: -12rem;
+  }
+  .right {
+    float: right;
     margin-right: -12rem;
   }
 }

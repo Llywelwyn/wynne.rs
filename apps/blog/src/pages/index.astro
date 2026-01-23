@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import '../styles/global.css';
 
 const posts = await getCollection('posts');
 const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -13,8 +14,8 @@ function formatDate(date: Date): string {
 ---
 <!DOCTYPE html>
 <html>
-<head><title>Blog</title></head>
+<head><meta charset="UTF-8"><title>Blog</title></head>
 <body>
-<pre>{sorted.map(post => `<a href="/${post.id}">${formatDate(post.data.date)}</a>    ${post.data.title}`).join('\n')}</pre>
+<pre set:html={sorted.map(post => `${formatDate(post.data.date)}    <a href="/${post.id}">${post.data.title}</a>`).join('\n')} />
 </body>
 </html>
