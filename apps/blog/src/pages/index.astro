@@ -13,7 +13,8 @@ interface Bookmark {
 const posts = await getCollection('posts');
 const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const bookmarks = yaml.load(bookmarksRaw) as Bookmark[];
+const bookmarks = (yaml.load(bookmarksRaw) as Bookmark[])
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 function formatDate(date: Date): string {
   const d = String(date.getDate()).padStart(2, '0');
