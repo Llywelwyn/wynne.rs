@@ -1,9 +1,19 @@
 ---
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
+import yaml from 'js-yaml';
+import bookmarksRaw from '../data/bookmarks.yaml?raw';
+
+interface Bookmark {
+  date: string;
+  title: string;
+  url: string;
+}
 
 const posts = await getCollection('posts');
 const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const bookmarks = yaml.load(bookmarksRaw) as Bookmark[];
 
 function formatDate(date: Date): string {
   const d = String(date.getDate()).padStart(2, '0');
@@ -11,11 +21,26 @@ function formatDate(date: Date): string {
   const y = String(date.getFullYear()).slice(-2);
   return `${d}/${m}/${y}`;
 }
+
+function formatBookmarkDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  return formatDate(date);
+}
+
+function extractDomain(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+}
 ---
 <!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><title>Blog</title></head>
 <body>
 <pre set:html={sorted.map(post => `${formatDate(post.data.date)}    <a href="/${post.id}">${post.data.title}</a>`).join('\n')} />
+<pre set:html={bookmarks.map(b => `${formatBookmarkDate(b.date)}    <a href="${b.url}">${b.title}</a> (${extractDomain(b.url)})`).join('\n')} />
 </body>
 </html>
