@@ -6,7 +6,12 @@ import { getPendingEntries, type GuestbookEntry } from '../lib/db';
 import { isAdmin } from '../lib/auth';
 import '../styles/global.css';
 
-const session = await getSession(Astro.request);
+let session;
+try {
+  session = await getSession(Astro.request);
+} catch {
+  return new Response('Auth not configured', { status: 500 });
+}
 
 if (!session) {
   return Astro.redirect('/api/auth/signin');
