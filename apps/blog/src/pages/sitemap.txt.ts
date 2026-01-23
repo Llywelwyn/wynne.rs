@@ -1,20 +1,15 @@
 import { getCollection } from 'astro:content';
-import yaml from 'js-yaml';
-import bookmarksRaw from '../data/bookmarks.yaml?raw';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { APIContext } from 'astro';
 
-interface Bookmark {
-  date: string;
-  title: string;
-  url: string;
-}
+const SUBDOMAINS = [
+  'https://penfield.wynne.rs/',
+];
 
 export async function GET(context: APIContext) {
   const site = context.site?.origin ?? 'https://wynne.rs';
   const posts = await getCollection('posts');
-  const bookmarks = yaml.load(bookmarksRaw) as Bookmark[];
 
   const txtDir = path.join(process.cwd(), 'public/txt');
   const txtFiles = fs.existsSync(txtDir)
@@ -29,9 +24,9 @@ export async function GET(context: APIContext) {
     ...txtFiles.map(txt => `/txt/${txt}`),
     '/bookmarks',
     '/guestbook',
-  ].map(path => `${site}${path}`);
+  ].map(p => `${site}${p}`);
 
-  return new Response(urls.join('\n'), {
+  return new Response([...urls, ...SUBDOMAINS].join('\n'), {
     headers: { 'Content-Type': 'text/plain' },
   });
 }
