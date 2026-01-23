@@ -1,5 +1,0 @@
-{
-  "buildCommand": "cd apps/blog && npm install && npx astro build --remote",
-  "outputDirectory": "apps/blog/dist",
-  "installCommand": "echo 'skipping root install'"
-}

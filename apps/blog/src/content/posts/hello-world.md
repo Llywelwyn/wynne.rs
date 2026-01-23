@@ -1,5 +1,5 @@
 ---
-title: Hello World
+title: hello world
 date: 2026-01-01
 ---
 

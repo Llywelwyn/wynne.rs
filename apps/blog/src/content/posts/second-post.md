@@ -1,6 +1,6 @@
 ---
-title: My Second Post
-date: 2025-01-02
+title: my second post
+date: 2026-01-02
 ---
 
 Another post to test the listing.
