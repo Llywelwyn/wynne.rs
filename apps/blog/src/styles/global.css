@@ -4,6 +4,10 @@ body {
   padding: 1rem;
 }
 
+.muted {
+  color: #888;
+}
+
 .left, .right {
   display: block;
   font-size: 0.9rem;

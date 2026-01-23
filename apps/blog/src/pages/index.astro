@@ -60,8 +60,15 @@ function extractDomain(url: string): string {
 <html>
 <head><meta charset="UTF-8"><title>Blog</title></head>
 <body>
-<pre set:html={sorted.map(post => `${formatDate(post.data.date)}    <a href="/${post.id}">${post.data.title}</a>`).join('\n')} />
-<pre set:html={bookmarks.map(b => `${formatBookmarkDate(b.date)}    <a href="${b.url}">${b.title}</a> (${extractDomain(b.url)})`).join('\n')} />
-<pre set:html={txtFiles.map(f => `${formatDate(f.mtime)}    <a href="/txt/${f.name}">${f.name}</a>`).join('\n')} />
+<pre set:html={[
+  'blog',
+  ...sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/${post.id}">${post.data.title}</a>`),
+  '',
+  'txt',
+  ...txtFiles.map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>`),
+  '',
+  'bookmarks',
+  ...bookmarks.map(b => `<span class="muted">${formatBookmarkDate(b.date)}</span>    <a href="${b.url}">${b.title}</a> <span class="muted">(${extractDomain(b.url)})</span>`)
+].join('\n')} />
 </body>
 </html>

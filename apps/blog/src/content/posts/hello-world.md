@@ -1,6 +1,6 @@
 ---
 title: Hello World
-date: 2025-01-01
+date: 2026-01-01
 ---
 
 This is my first blog post. :right[A sidenote appears here on wide screens.]
