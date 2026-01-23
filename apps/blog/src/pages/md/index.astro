@@ -12,8 +12,12 @@ const grouped = posts.reduce((acc, post) => {
   return acc;
 }, {} as Record<string, typeof posts>);
 
-// Sort categories alphabetically
-const sortedCategories = Object.keys(grouped).sort();
+// Sort categories: "posts" first, then alphabetically
+const sortedCategories = Object.keys(grouped).sort((a, b) => {
+  if (a === 'posts') return -1;
+  if (b === 'posts') return 1;
+  return a.localeCompare(b);
+});
 
 // Sort posts within each category: pinned first, then by date descending
 for (const category of sortedCategories) {
