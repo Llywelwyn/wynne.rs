@@ -1,0 +1,11 @@
+---
+import { intros } from '../data/intros';
+import { moods } from '../data/moods';
+const epoch = Math.floor(Date.now() / 3600000);
+const start = Math.floor(new Date('2026-01-22T14:00:00Z').getTime() / 3600000);
+const t = epoch; // for mood selection
+const ring = epoch - start;
+const intro: { text: string } = intros[t % intros.length];
+const mood: { num: number, text: string } = moods[t % moods.length];
+---
+<!DOCTYPE html><link rel=icon href=data:,><style>body{margin:9%;text-align:center}</style><title>Penfield</title><p><b>Ring #{ring}.</b> <span set:html={intro.text} /></p><p><b>{mood.num}</b>. {mood.text}.</p>

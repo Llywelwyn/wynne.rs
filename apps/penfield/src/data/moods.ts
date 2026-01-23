@@ -1,0 +1,17 @@
+export const moods = [
+  { num: 3, text: "Desire to dial" },
+  { num: 382, text: "Desire to engage in creative activity" },
+  { num: 481, text: "Awareness of the manifold possibilities open in the future" },
+  { num: 594, text: "Pleased acknowledgment of husband's superior wisdom" },
+  { num: 670, text: "Long-deserved peace" },
+  { num: 888, text: "Desire to watch TV, no matter what's on" },
+  { num: 443, text: "Self-accusatory depression" },
+  { num: 72, text: "Vague unease about tomorrow" },
+  { num: 158, text: "Acceptance of routine" },
+  { num: 291, text: "Brief contentment with material possessions" },
+  { num: 407, text: "Suppressed awareness of mortality" },
+  { num: 531, text: "Calm readiness to consume" },
+  { num: 816, text: "Desire to return to bed" },
+  { num: 952, text: "Resigned compliance" },
+  { num: 64, text: "Faint hope that things will improve" },
+];
