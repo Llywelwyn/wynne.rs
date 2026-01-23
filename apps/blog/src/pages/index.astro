@@ -5,6 +5,7 @@ import yaml from 'js-yaml';
 import bookmarksRaw from '../data/bookmarks.yaml?raw';
 import fs from 'node:fs';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 import { getApprovedEntries, type GuestbookEntry } from '../lib/db';
 
 interface Bookmark {
@@ -15,12 +16,21 @@ interface Bookmark {
 
 interface TxtFile {
   name: string;
-  mtime: Date;
+  date: Date;
   pinned: boolean;
 }
 
 interface TxtConfig {
   pinned?: string[];
+}
+
+function getGitDate(filePath: string): Date {
+  try {
+    const timestamp = execSync(`git log -1 --format=%cI -- "${filePath}"`, { encoding: 'utf8' }).trim();
+    return timestamp ? new Date(timestamp) : new Date(0);
+  } catch {
+    return new Date(0);
+  }
 }
 
 const posts = await getCollection('posts');
@@ -64,13 +74,13 @@ const txtFiles: TxtFile[] = fs.existsSync(txtDir)
   ? fs.readdirSync(txtDir)
       .filter(file => file.endsWith('.txt'))
       .map(name => {
-        const stat = fs.statSync(path.join(txtDir, name));
-        return { name, mtime: stat.mtime, pinned: pinnedSet.has(name) };
+        const filePath = path.join(txtDir, name);
+        return { name, date: getGitDate(filePath), pinned: pinnedSet.has(name) };
       })
       .sort((a, b) => {
         if (a.pinned && !b.pinned) return -1;
         if (!a.pinned && b.pinned) return 1;
-        return b.mtime.getTime() - a.mtime.getTime();
+        return b.date.getTime() - a.date.getTime();
       })
   : [];
 
@@ -120,7 +130,7 @@ function extractDomain(url: string): string {
 <details open>
   <summary>txt</summary>
 <pre set:html={[
-  ...txtFiles.slice(0, 10).map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>${f.pinned ? ' [pinned]' : ''}`),
+  ...txtFiles.slice(0, 10).map(f => `<span class="muted">${formatDate(f.date)}</span>    <a href="/txt/${f.name}">${f.name}</a>${f.pinned ? ' [pinned]' : ''}`),
   ...(txtFiles.length > 10 ? [`<a href="/txt/">+${txtFiles.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
