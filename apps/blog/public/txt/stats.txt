@@ -1,0 +1,11 @@
+this site consists of [WORDS] words across [PAGES] pages
+
+there are [POSTS] blog posts
+[TXT] txt files
+and [BOOKMARKS] bookmarks
+
+[GUESTBOOK] people have signed the guestbook
+
+this file was generated automatically on deploy
+cheers,
+lewis
