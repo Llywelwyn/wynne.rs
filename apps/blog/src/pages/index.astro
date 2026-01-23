@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts');
+const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+function formatDate(date: Date): string {
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const y = String(date.getFullYear()).slice(-2);
+  return `${d}/${m}/${y}`;
+}
+---
+<!DOCTYPE html>
+<html>
+<head><title>Blog</title></head>
+<body>
+<pre>{sorted.map(post => `<a href="/${post.id}">${formatDate(post.data.date)}</a>    ${post.data.title}`).join('\n')}</pre>
+</body>
+</html>
