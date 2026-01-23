@@ -9,9 +9,15 @@ export default defineConfig({
     }),
   ],
   callbacks: {
+    jwt({ token, account, profile }) {
+      if (account && profile) {
+        token.id = profile.id;
+      }
+      return token;
+    },
     session({ session, token }) {
-      if (session.user && token.sub) {
-        session.user.id = token.sub;
+      if (session.user && token.id) {
+        (session.user as any).id = String(token.id);
       }
       return session;
     },
