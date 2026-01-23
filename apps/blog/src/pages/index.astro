@@ -60,17 +60,23 @@ function extractDomain(url: string): string {
 <html>
 <head><meta charset="UTF-8"><title>lewis m.w.</title></head>
 <body>
-<pre set:html={[
-  'lewis m.w.  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a>',
-  '',
-  'blog',
-  ...sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/posts/${post.id}">${post.data.title}</a>`),
-  '',
-  'txt',
-  ...txtFiles.map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>`),
-  '',
-  'bookmarks',
-  ...bookmarks.map(b => `<span class="muted">${formatBookmarkDate(b.date)}</span>    <a href="${b.url}">${b.title}</a> <span class="muted">(${extractDomain(b.url)})</span>`)
-].join('\n')} />
+<header>
+<pre>lewis m.w.  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a></pre>
+</header>
+
+<details open>
+  <summary>blog</summary>
+<pre set:html={sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/posts/${post.id}">${post.data.title}</a>`).join('\n')} />
+</details>
+
+<details open>
+  <summary>txt</summary>
+<pre set:html={txtFiles.map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>`).join('\n')} />
+</details>
+
+<details open>
+  <summary>bookmarks</summary>
+<pre set:html={bookmarks.map(b => `<span class="muted">${formatBookmarkDate(b.date)}</span>    <a href="${b.url}">${b.title}</a> <span class="muted">(${extractDomain(b.url)})</span>`).join('\n')} />
+</details>
 </body>
 </html>

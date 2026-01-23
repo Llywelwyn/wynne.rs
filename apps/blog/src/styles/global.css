@@ -28,3 +28,21 @@ body {
     margin-right: -12rem;
   }
 }
+
+details {
+  margin: 1rem 0;
+}
+
+summary {
+  cursor: pointer;
+  font-family: monospace;
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+details pre {
+  margin: 0;
+}
