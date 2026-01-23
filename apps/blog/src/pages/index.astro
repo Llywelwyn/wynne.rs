@@ -64,7 +64,7 @@ function extractDomain(url: string): string {
   'lewis m.w.  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a>',
   '',
   'blog',
-  ...sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/${post.id}">${post.data.title}</a>`),
+  ...sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/posts/${post.id}">${post.data.title}</a>`),
   '',
   'txt',
   ...txtFiles.map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>`),
