@@ -16,6 +16,11 @@ interface Bookmark {
 interface TxtFile {
   name: string;
   mtime: Date;
+  pinned: boolean;
+}
+
+interface TxtConfig {
+  pinned?: string[];
 }
 
 const posts = await getCollection('posts');
@@ -49,14 +54,24 @@ const bookmarks = (yaml.load(bookmarksRaw) as Bookmark[])
 
 // Auto-discover txt files from public/txt/
 const txtDir = path.join(process.cwd(), 'public/txt');
+const txtConfigPath = path.join(txtDir, 'config.yaml');
+const txtConfig: TxtConfig = fs.existsSync(txtConfigPath)
+  ? yaml.load(fs.readFileSync(txtConfigPath, 'utf8')) as TxtConfig
+  : {};
+const pinnedSet = new Set(txtConfig.pinned || []);
+
 const txtFiles: TxtFile[] = fs.existsSync(txtDir)
   ? fs.readdirSync(txtDir)
       .filter(file => file.endsWith('.txt'))
       .map(name => {
         const stat = fs.statSync(path.join(txtDir, name));
-        return { name, mtime: stat.mtime };
+        return { name, mtime: stat.mtime, pinned: pinnedSet.has(name) };
       })
-      .sort((a, b) => b.mtime.getTime() - a.mtime.getTime())
+      .sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+        return b.mtime.getTime() - a.mtime.getTime();
+      })
   : [];
 
 let guestbookEntries: GuestbookEntry[] = [];
@@ -105,7 +120,7 @@ function extractDomain(url: string): string {
 <details open>
   <summary>txt</summary>
 <pre set:html={[
-  ...txtFiles.slice(0, 10).map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>`),
+  ...txtFiles.slice(0, 10).map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>${f.pinned ? ' [pinned]' : ''}`),
   ...(txtFiles.length > 10 ? [`<a href="/txt/">+${txtFiles.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
