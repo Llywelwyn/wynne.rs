@@ -24,7 +24,7 @@ export async function GET(context: APIContext) {
     : [];
 
   const urls = [
-    ...posts.map(post => `/blog/${post.id}`),
+    ...posts.map(post => `/md/${post.id}`),
     ...txtFiles.map(txt => `/txt/${txt}`),
     ...bookmarks.map(b => b.url),
   ];
