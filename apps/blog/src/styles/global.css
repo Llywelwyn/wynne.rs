@@ -1,0 +1,20 @@
+body {
+  max-width: 38rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.aside {
+  display: block;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 63rem) {
+  .aside {
+    display: inline;
+    float: right;
+    position: relative;
+    width: 10rem;
+    margin-right: -12rem;
+  }
+}
