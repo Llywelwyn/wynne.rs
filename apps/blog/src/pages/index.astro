@@ -89,11 +89,15 @@ function extractDomain(url: string): string {
 
 <details open>
   <summary>guestbook</summary>
-<pre set:html={[
-  ...guestbookEntries.map(e => `<span class="muted">${formatDate(e.createdAt)}</span>    ${e.url ? `<a href="${e.url}">${e.name}</a>` : e.name}: ${e.message}`),
-  '',
-  '<a href="#" id="sign-guestbook">sign</a><span id="guestbook-status"></span>'
-].join('\n')} />
+  <div class="guestbook-entries">
+    {guestbookEntries.map(e => (
+      <div class="guestbook-entry">
+        <span class="date">{formatDate(e.createdAt)}</span>
+        <span set:html={`${e.url ? `<a href="${e.url}">${e.name}</a>` : e.name}: ${e.message}`} />
+      </div>
+    ))}
+  </div>
+  <pre class="guestbook-sign"><a href="#" id="sign-guestbook">sign</a><span id="guestbook-status"></span></pre>
 </details>
 
 <script>

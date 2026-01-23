@@ -46,3 +46,23 @@ summary::-webkit-details-marker {
 details pre {
   margin: 0;
 }
+
+.guestbook-entries {
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+.guestbook-entry {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 4ch;
+}
+
+.guestbook-entry .date {
+  color: #888;
+}
+
+.guestbook-sign {
+  font-family: monospace;
+  white-space: pre;
+}
