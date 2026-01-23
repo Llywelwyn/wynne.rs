@@ -1,0 +1,74 @@
+---
+import '../../styles/global.css';
+import { getApprovedEntries, type GuestbookEntry } from '../../lib/db';
+
+let guestbookEntries: GuestbookEntry[] = [];
+try {
+  guestbookEntries = await getApprovedEntries();
+} catch {
+  // DB not available during dev without env vars
+}
+
+function formatDate(date: Date): string {
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const y = String(date.getFullYear()).slice(-2);
+  return `${d}/${m}/${y}`;
+}
+---
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>guestbook - lewis m.w.</title></head>
+<body>
+<header>
+<pre><a href="/">lewis m.w.</a>  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a></pre>
+</header>
+
+<details open>
+  <summary>guestbook</summary>
+  <div class="guestbook-entries">
+    {guestbookEntries.map(e => (
+      <div class="guestbook-entry">
+        <span class="muted">{formatDate(e.createdAt)}</span>
+        <span><b set:html={e.url ? `<a href="${e.url}">${e.name}</a>` : e.name} /> {e.message}</span>
+      </div>
+    ))}
+    <div class="guestbook-entry">
+      <span></span>
+      <span><a href="#" id="sign-guestbook">sign</a><span id="guestbook-status"></span></span>
+    </div>
+  </div>
+</details>
+
+<script>
+  document.getElementById('sign-guestbook')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const status = document.getElementById('guestbook-status')!;
+
+    const name = prompt('name:');
+    if (!name) return;
+
+    const message = prompt('message:');
+    if (!message) return;
+
+    const url = prompt('url (optional):');
+
+    try {
+      const res = await fetch('/api/guestbook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, message, url: url || null }),
+      });
+
+      if (res.ok) {
+        status.textContent = ' thanks! pending approval.';
+      } else {
+        status.textContent = ' error';
+      }
+    } catch {
+      status.textContent = ' failed';
+    }
+  });
+</script>
+</body>
+</html>

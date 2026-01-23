@@ -74,30 +74,42 @@ function extractDomain(url: string): string {
 
 <details open>
   <summary>blog</summary>
-<pre set:html={sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/posts/${post.id}">${post.data.title}</a>`).join('\n')} />
+<pre set:html={[
+  ...sorted.slice(0, 10).map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/posts/${post.id}">${post.data.title}</a>`),
+  ...(sorted.length > 10 ? [`<a href="/blog/">+${sorted.length - 10} more</a>`] : [])
+].join('\n')} />
 </details>
 
 <details open>
   <summary>txt</summary>
-<pre set:html={txtFiles.map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>`).join('\n')} />
+<pre set:html={[
+  ...txtFiles.slice(0, 10).map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>`),
+  ...(txtFiles.length > 10 ? [`<a href="/txt/">+${txtFiles.length - 10} more</a>`] : [])
+].join('\n')} />
 </details>
 
 <details open>
   <summary>bookmarks</summary>
-<pre set:html={bookmarks.map(b => `<span class="muted">${formatBookmarkDate(b.date)}</span>    <a href="${b.url}">${b.title}</a> <span class="muted">(${extractDomain(b.url)})</span>`).join('\n')} />
+<pre set:html={[
+  ...bookmarks.slice(0, 10).map(b => `<span class="muted">${formatBookmarkDate(b.date)}</span>    <a href="${b.url}">${b.title}</a> <span class="muted">(${extractDomain(b.url)})</span>`),
+  ...(bookmarks.length > 10 ? [`<a href="/bookmarks/">+${bookmarks.length - 10} more</a>`] : [])
+].join('\n')} />
 </details>
 
 <details open>
   <summary>guestbook</summary>
   <div class="guestbook-entries">
-    {guestbookEntries.map(e => (
+    {guestbookEntries.slice(0, 10).map(e => (
       <div class="guestbook-entry">
-        <span class="date">{formatDate(e.createdAt)}</span>
-        <span set:html={`${e.url ? `<a href="${e.url}">${e.name}</a>` : e.name}: ${e.message}`} />
+        <span class="muted">{formatDate(e.createdAt)}</span>
+        <span><b set:html={e.url ? `<a href="${e.url}">${e.name}</a>` : e.name} /> {e.message}</span>
       </div>
     ))}
+    <div class="guestbook-entry">
+      <span>{guestbookEntries.length > 10 && <a href="/guestbook/">+{guestbookEntries.length - 10} more</a>}</span>
+      <span><a href="#" id="sign-guestbook">sign</a><span id="guestbook-status"></span></span>
+    </div>
   </div>
-  <pre class="guestbook-sign"><a href="#" id="sign-guestbook">sign</a><span id="guestbook-status"></span></pre>
 </details>
 
 <script>

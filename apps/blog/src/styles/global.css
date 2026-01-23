@@ -49,20 +49,10 @@ details pre {
 
 .guestbook-entries {
   font-family: monospace;
-  white-space: pre-wrap;
 }
 
 .guestbook-entry {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 8ch 1fr;
   gap: 0 4ch;
-}
-
-.guestbook-entry .date {
-  color: #888;
-}
-
-.guestbook-sign {
-  font-family: monospace;
-  white-space: pre;
 }

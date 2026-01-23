@@ -1,0 +1,49 @@
+---
+import '../../styles/global.css';
+import yaml from 'js-yaml';
+import bookmarksRaw from '../../data/bookmarks.yaml?raw';
+
+interface Bookmark {
+  date: string;
+  title: string;
+  url: string;
+}
+
+const bookmarks = (yaml.load(bookmarksRaw) as Bookmark[])
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+function formatDate(date: Date): string {
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const y = String(date.getFullYear()).slice(-2);
+  return `${d}/${m}/${y}`;
+}
+
+function formatBookmarkDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  return formatDate(date);
+}
+
+function extractDomain(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+}
+---
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>bookmarks - lewis m.w.</title></head>
+<body>
+<header>
+<pre><a href="/">lewis m.w.</a>  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a></pre>
+</header>
+
+<details open>
+  <summary>bookmarks</summary>
+<pre set:html={bookmarks.map(b => `<span class="muted">${formatBookmarkDate(b.date)}</span>    <a href="${b.url}">${b.title}</a> <span class="muted">(${extractDomain(b.url)})</span>`).join('\n')} />
+</details>
+</body>
+</html>
