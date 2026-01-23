@@ -3,6 +3,8 @@ import { getCollection } from 'astro:content';
 import '../styles/global.css';
 import yaml from 'js-yaml';
 import bookmarksRaw from '../data/bookmarks.yaml?raw';
+import fs from 'node:fs';
+import path from 'node:path';
 
 interface Bookmark {
   date: string;
@@ -10,11 +12,28 @@ interface Bookmark {
   url: string;
 }
 
+interface TxtFile {
+  name: string;
+  mtime: Date;
+}
+
 const posts = await getCollection('posts');
 const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const bookmarks = (yaml.load(bookmarksRaw) as Bookmark[])
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+// Auto-discover txt files from public/txt/
+const txtDir = path.join(process.cwd(), 'public/txt');
+const txtFiles: TxtFile[] = fs.existsSync(txtDir)
+  ? fs.readdirSync(txtDir)
+      .filter(file => file.endsWith('.txt'))
+      .map(name => {
+        const stat = fs.statSync(path.join(txtDir, name));
+        return { name, mtime: stat.mtime };
+      })
+      .sort((a, b) => b.mtime.getTime() - a.mtime.getTime())
+  : [];
 
 function formatDate(date: Date): string {
   const d = String(date.getDate()).padStart(2, '0');
@@ -43,5 +62,6 @@ function extractDomain(url: string): string {
 <body>
 <pre set:html={sorted.map(post => `${formatDate(post.data.date)}    <a href="/${post.id}">${post.data.title}</a>`).join('\n')} />
 <pre set:html={bookmarks.map(b => `${formatBookmarkDate(b.date)}    <a href="${b.url}">${b.title}</a> (${extractDomain(b.url)})`).join('\n')} />
+<pre set:html={txtFiles.map(f => `${formatDate(f.mtime)}    <a href="/txt/${f.name}">${f.name}</a>`).join('\n')} />
 </body>
 </html>
