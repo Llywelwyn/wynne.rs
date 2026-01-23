@@ -58,9 +58,11 @@ function extractDomain(url: string): string {
 ---
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Blog</title></head>
+<head><meta charset="UTF-8"><title>lewis m.w.</title></head>
 <body>
 <pre set:html={[
+  'lewis m.w.  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a>',
+  '',
   'blog',
   ...sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/${post.id}">${post.data.title}</a>`),
   '',
