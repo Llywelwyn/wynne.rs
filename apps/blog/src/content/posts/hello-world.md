@@ -1,6 +1,7 @@
 ---
 title: hello world
 date: 2026-01-01
+pinned: true
 ---
 
 This is my first blog post. :right[A sidenote appears here on wide screens.]

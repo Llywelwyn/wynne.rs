@@ -3,7 +3,11 @@ import { getCollection } from 'astro:content';
 import '../../styles/global.css';
 
 const posts = await getCollection('posts');
-const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const sorted = posts.sort((a, b) => {
+  if (a.data.pinned && !b.data.pinned) return -1;
+  if (!a.data.pinned && b.data.pinned) return 1;
+  return b.data.date.getTime() - a.data.date.getTime();
+});
 
 function formatDate(date: Date): string {
   const d = String(date.getDate()).padStart(2, '0');
@@ -22,7 +26,7 @@ function formatDate(date: Date): string {
 
 <details open>
   <summary>blog</summary>
-<pre set:html={sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/blog/${post.id}">${post.data.title}</a>`).join('\n')} />
+<pre set:html={sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/blog/${post.id}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`).join('\n')} />
 </details>
 </body>
 </html>

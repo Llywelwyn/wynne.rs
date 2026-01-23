@@ -19,7 +19,11 @@ interface TxtFile {
 }
 
 const posts = await getCollection('posts');
-const sorted = posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const sorted = posts.sort((a, b) => {
+  if (a.data.pinned && !b.data.pinned) return -1;
+  if (!a.data.pinned && b.data.pinned) return 1;
+  return b.data.date.getTime() - a.data.date.getTime();
+});
 
 const bookmarks = (yaml.load(bookmarksRaw) as Bookmark[])
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -75,7 +79,7 @@ function extractDomain(url: string): string {
 <details open>
   <summary>blog</summary>
 <pre set:html={[
-  ...sorted.slice(0, 10).map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/blog/${post.id}">${post.data.title}</a>`),
+  ...sorted.slice(0, 10).map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/blog/${post.id}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`),
   ...(sorted.length > 10 ? [`<a href="/blog/">+${sorted.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
