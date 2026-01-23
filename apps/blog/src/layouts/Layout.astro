@@ -1,0 +1,23 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  showHeader?: boolean;
+  isHome?: boolean;
+}
+
+const { title, showHeader = true, isHome = false } = Astro.props;
+---
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{title}</title></head>
+<body>
+{showHeader && (
+<header>
+<pre>{isHome ? 'lewis m.w.' : <a href="/">lewis m.w.</a>}  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a></pre>
+</header>
+)}
+<slot />
+</body>
+</html>

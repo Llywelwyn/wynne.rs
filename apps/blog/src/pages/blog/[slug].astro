@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
-import '../../styles/global.css';
+import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -13,17 +13,10 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 ---
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>{post.data.title} - lewis m.w.</title></head>
-<body>
-<header>
-<pre><a href="/">lewis m.w.</a>  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a></pre>
-</header>
+<Layout title={`${post.data.title} - lewis m.w.`}>
 
 <article>
 <h1>{post.data.title}</h1>
 <Content />
 </article>
-</body>
-</html>
+</Layout>

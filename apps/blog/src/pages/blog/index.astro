@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import '../../styles/global.css';
+import Layout from '../../layouts/Layout.astro';
 
 const posts = await getCollection('posts');
 const sorted = posts.sort((a, b) => {
@@ -16,17 +16,10 @@ function formatDate(date: Date): string {
   return `${d}/${m}/${y}`;
 }
 ---
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>blog - lewis m.w.</title></head>
-<body>
-<header>
-<pre><a href="/">lewis m.w.</a>  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a></pre>
-</header>
+<Layout title="blog - lewis m.w.">
 
 <details open>
   <summary>blog</summary>
 <pre set:html={sorted.map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/blog/${post.id}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`).join('\n')} />
 </details>
-</body>
-</html>
+</Layout>

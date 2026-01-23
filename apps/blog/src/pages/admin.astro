@@ -4,7 +4,7 @@ export const prerender = false;
 import { getSession } from 'auth-astro/server';
 import { getPendingEntries, type GuestbookEntry } from '../lib/db';
 import { isAdmin } from '../lib/auth';
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
 
 let session;
 try {
@@ -35,10 +35,8 @@ function formatDate(date: Date): string {
   return `${d}/${m}/${y}`;
 }
 ---
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>admin - guestbook</title></head>
-<body>
+<Layout title="admin - guestbook" showHeader={false}>
+
 <h1>guestbook admin</h1>
 <p>logged in as {session.user?.name} <a href="/api/auth/signout">sign out</a></p>
 
@@ -92,5 +90,4 @@ function formatDate(date: Date): string {
     });
   });
 </script>
-</body>
-</html>
+</Layout>

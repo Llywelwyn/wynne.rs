@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
 import yaml from 'js-yaml';
 import bookmarksRaw from '../data/bookmarks.yaml?raw';
 import fs from 'node:fs';
@@ -68,13 +68,7 @@ function extractDomain(url: string): string {
   }
 }
 ---
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>lewis m.w.</title></head>
-<body>
-<header>
-<pre>lewis m.w.  <a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a></pre>
-</header>
+<Layout title="lewis m.w." isHome>
 
 <details open>
   <summary>blog</summary>
@@ -146,5 +140,4 @@ function extractDomain(url: string): string {
     }
   });
 </script>
-</body>
-</html>
+</Layout>
