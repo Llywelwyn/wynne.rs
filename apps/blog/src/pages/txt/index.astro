@@ -2,21 +2,37 @@
 import Layout from '../../layouts/Layout.astro';
 import fs from 'node:fs';
 import path from 'node:path';
+import yaml from 'js-yaml';
 
 interface TxtFile {
   name: string;
   mtime: Date;
+  pinned: boolean;
+}
+
+interface TxtConfig {
+  pinned?: string[];
 }
 
 const txtDir = path.join(process.cwd(), 'public/txt');
+const configPath = path.join(txtDir, 'config.yaml');
+const config: TxtConfig = fs.existsSync(configPath)
+  ? yaml.load(fs.readFileSync(configPath, 'utf8')) as TxtConfig
+  : {};
+const pinnedSet = new Set(config.pinned || []);
+
 const txtFiles: TxtFile[] = fs.existsSync(txtDir)
   ? fs.readdirSync(txtDir)
       .filter(file => file.endsWith('.txt'))
       .map(name => {
         const stat = fs.statSync(path.join(txtDir, name));
-        return { name, mtime: stat.mtime };
+        return { name, mtime: stat.mtime, pinned: pinnedSet.has(name) };
       })
-      .sort((a, b) => b.mtime.getTime() - a.mtime.getTime())
+      .sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+        return b.mtime.getTime() - a.mtime.getTime();
+      })
   : [];
 
 function formatDate(date: Date): string {
@@ -30,6 +46,6 @@ function formatDate(date: Date): string {
 
 <details open>
   <summary>txt</summary>
-<pre set:html={txtFiles.map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>`).join('\n')} />
+<pre set:html={txtFiles.map(f => `<span class="muted">${formatDate(f.mtime)}</span>    <a href="/txt/${f.name}">${f.name}</a>${f.pinned ? ' [pinned]' : ''}`).join('\n')} />
 </details>
 </Layout>
