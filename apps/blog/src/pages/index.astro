@@ -89,42 +89,40 @@ function extractDomain(url: string): string {
 
 <details open>
   <summary>guestbook</summary>
-<pre set:html={guestbookEntries.length > 0
-    ? guestbookEntries.map(e => `<span class="muted">${formatDate(e.createdAt)}</span>    ${e.url ? `<a href="${e.url}">${e.name}</a>` : e.name}: ${e.message}`).join('\n')
-    : '<span class="muted">no entries yet</span>'} />
-  <form id="guestbook-form">
-    <input type="text" name="name" placeholder="name" required maxlength="100" />
-    <input type="text" name="url" placeholder="url (optional)" maxlength="200" />
-    <textarea name="message" placeholder="message" required maxlength="500"></textarea>
-    <button type="submit">sign</button>
-  </form>
-  <div id="guestbook-status"></div>
+<pre set:html={[
+  ...guestbookEntries.map(e => `<span class="muted">${formatDate(e.createdAt)}</span>    ${e.url ? `<a href="${e.url}">${e.name}</a>` : e.name}: ${e.message}`),
+  '',
+  '<a href="#" id="sign-guestbook">sign</a><span id="guestbook-status"></span>'
+].join('\n')} />
 </details>
 
 <script>
-  const form = document.getElementById('guestbook-form') as HTMLFormElement;
-  const status = document.getElementById('guestbook-status')!;
-
-  form.addEventListener('submit', async (e) => {
+  document.getElementById('sign-guestbook')?.addEventListener('click', async (e) => {
     e.preventDefault();
-    const data = Object.fromEntries(new FormData(form));
+    const status = document.getElementById('guestbook-status')!;
+
+    const name = prompt('name:');
+    if (!name) return;
+
+    const message = prompt('message:');
+    if (!message) return;
+
+    const url = prompt('url (optional):');
 
     try {
       const res = await fetch('/api/guestbook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ name, message, url: url || null }),
       });
 
       if (res.ok) {
-        status.textContent = 'thanks! your message is pending approval.';
-        form.reset();
+        status.textContent = ' thanks! pending approval.';
       } else {
-        const err = await res.json();
-        status.textContent = err.error || 'something went wrong';
+        status.textContent = ' error';
       }
     } catch {
-      status.textContent = 'failed to submit';
+      status.textContent = ' failed';
     }
   });
 </script>

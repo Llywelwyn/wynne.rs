@@ -46,17 +46,3 @@ summary::-webkit-details-marker {
 details pre {
   margin: 0;
 }
-
-#guestbook-form {
-  margin-top: 0.5rem;
-}
-
-#guestbook-form input,
-#guestbook-form textarea,
-#guestbook-form button {
-  font: inherit;
-}
-
-#guestbook-status {
-  color: #888;
-}
