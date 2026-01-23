@@ -29,3 +29,6 @@ and there's a [/guestbook](https://wynne.rs/guestbook/) that used to have placea
 in the end, everything on this site is visible straight from the index page in one massive list, ordered by date, with pinned posts at the top of their respective category.
 
 and that's it. i don't need anything else to archive things i care about
+
+cheers,  
+lewis x
