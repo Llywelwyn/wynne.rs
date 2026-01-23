@@ -5,8 +5,8 @@ import yaml from 'js-yaml';
 import bookmarksRaw from '../data/bookmarks.yaml?raw';
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
 import { getApprovedEntries, type GuestbookEntry } from '../lib/db';
+import { getGitDate } from '../utils';
 
 interface Bookmark {
   date: string;
@@ -22,15 +22,6 @@ interface TxtFile {
 
 interface TxtConfig {
   pinned?: string[];
-}
-
-function getGitDate(filePath: string): Date {
-  try {
-    const timestamp = execSync(`git log -1 --format=%cI -- "${filePath}"`, { encoding: 'utf8' }).trim();
-    return timestamp ? new Date(timestamp) : new Date(0);
-  } catch {
-    return new Date(0);
-  }
 }
 
 const posts = await getCollection('posts');

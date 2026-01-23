@@ -5,6 +5,7 @@ import bookmarksRaw from '../data/bookmarks.yaml?raw';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { APIContext } from 'astro';
+import { getGitDate } from '../utils';
 
 interface Bookmark {
   date: string;
@@ -14,7 +15,7 @@ interface Bookmark {
 
 interface TxtFile {
   name: string;
-  mtime: Date;
+  date: Date;
 }
 
 export async function GET(context: APIContext) {
@@ -27,7 +28,7 @@ export async function GET(context: APIContext) {
         .filter(file => file.endsWith('.txt'))
         .map(name => ({
           name,
-          mtime: fs.statSync(path.join(txtDir, name)).mtime,
+          date: getGitDate(path.join(txtDir, name)),
         }))
     : [];
 
@@ -40,7 +41,7 @@ export async function GET(context: APIContext) {
     })),
     ...txtFiles.map(txt => ({
       title: txt.name,
-      pubDate: txt.mtime,
+      pubDate: txt.date,
       link: `/txt/${txt.name}`,
       description: txt.name,
     })),

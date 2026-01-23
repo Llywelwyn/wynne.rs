@@ -2,8 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
 import yaml from 'js-yaml';
+import { getGitDate } from '../../utils';
 
 interface TxtFile {
   name: string;
@@ -13,15 +13,6 @@ interface TxtFile {
 
 interface TxtConfig {
   pinned?: string[];
-}
-
-function getGitDate(filePath: string): Date {
-  try {
-    const timestamp = execSync(`git log -1 --format=%cI -- "${filePath}"`, { encoding: 'utf8' }).trim();
-    return timestamp ? new Date(timestamp) : new Date(0);
-  } catch {
-    return new Date(0);
-  }
 }
 
 const txtDir = path.join(process.cwd(), 'public/txt');
