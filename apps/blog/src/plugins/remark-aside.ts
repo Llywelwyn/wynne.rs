@@ -25,12 +25,17 @@ export default function remarkAside() {
           const firstChild = child.children[0];
           if (firstChild?.type === 'textDirective' && firstChild.name === 'label') {
             const labelText = nodeToText(firstChild);
+            const href = firstChild.attributes?.href;
             const contentText = child.children
               .slice(1)
               .map(nodeToText)
               .join('')
               .replace(/^\s+/, '');
-            html += `<span class="label">${labelText}</span>`;
+            if (href) {
+              html += `<a class="link" href="${href}">${labelText}</a>`;
+            } else {
+              html += `<span class="label">${labelText}</span>`;
+            }
             html += `<div class="content">${contentText}</div>`;
           }
         }
