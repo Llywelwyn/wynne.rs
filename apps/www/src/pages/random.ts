@@ -15,7 +15,7 @@ interface Bookmark {
 
 export async function GET(context: APIContext) {
   const site = context.site?.origin ?? 'https://wynne.rs';
-  const posts = await getCollection('posts');
+  const posts = await getCollection('posts', ({ data }) => data.draft !== true);
   const bookmarks = yaml.load(bookmarksRaw) as Bookmark[];
 
   const txtDir = path.join(process.cwd(), 'public/txt');
