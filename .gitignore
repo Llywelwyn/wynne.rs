@@ -3,4 +3,4 @@ dist
 .astro
 .vercel
 pnpm-lock.yaml
-apps/www/.env
+**/.env
