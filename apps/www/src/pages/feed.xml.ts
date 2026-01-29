@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import yaml from 'js-yaml';
-import bookmarksRaw from '../data/bookmarks.yaml?raw';
+import bookmarksRaw from '../content/bookmarks.yaml?raw';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { APIContext } from 'astro';

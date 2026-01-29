@@ -35,7 +35,7 @@ for (const txt of txtFiles) {
 }
 
 // Count bookmarks
-const bookmarksFile = path.join(root, 'src/data/bookmarks.yaml');
+const bookmarksFile = path.join(root, 'src/content/bookmarks.yaml');
 const bookmarks = fs.existsSync(bookmarksFile)
   ? yaml.load(fs.readFileSync(bookmarksFile, 'utf-8')) || []
   : [];
