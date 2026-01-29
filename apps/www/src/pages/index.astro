@@ -24,7 +24,7 @@ interface TxtConfig {
   pinned?: string[];
 }
 
-const posts = await getCollection('posts');
+const posts = await getCollection('posts', ({ data }) => data.draft !== true);
 
 // Group by category (default: "posts")
 const grouped = posts.reduce((acc, post) => {
