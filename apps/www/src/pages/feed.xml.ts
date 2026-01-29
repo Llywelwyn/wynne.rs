@@ -1,17 +1,9 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
-import yaml from 'js-yaml';
-import bookmarksRaw from '../content/bookmarks.yaml?raw';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { APIContext } from 'astro';
 import { getGitDate } from '../utils';
-
-interface Bookmark {
-  date: string;
-  title: string;
-  url: string;
-}
 
 interface TxtFile {
   name: string;
@@ -20,7 +12,7 @@ interface TxtFile {
 
 export async function GET(context: APIContext) {
   const posts = await getCollection('posts', ({ data }) => data.draft !== true);
-  const bookmarks = yaml.load(bookmarksRaw) as Bookmark[];
+  const bookmarks = await getCollection('bookmarks');
 
   const txtDir = path.join(process.cwd(), 'public/txt');
   const txtFiles: TxtFile[] = fs.existsSync(txtDir)
@@ -46,10 +38,10 @@ export async function GET(context: APIContext) {
       description: txt.name,
     })),
     ...bookmarks.map(b => ({
-      title: b.title,
-      pubDate: new Date(b.date),
-      link: b.url,
-      description: b.title,
+      title: b.data.title,
+      pubDate: b.data.date,
+      link: b.data.url,
+      description: b.data.title,
     })),
   ].sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 

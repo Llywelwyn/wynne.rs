@@ -1,27 +1,16 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import yaml from 'js-yaml';
-import bookmarksRaw from '../../content/bookmarks.yaml?raw';
 
-interface Bookmark {
-  date: string;
-  title: string;
-  url: string;
-}
-
-const bookmarks = (yaml.load(bookmarksRaw) as Bookmark[])
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+const bookmarksCollection = await getCollection('bookmarks');
+const bookmarks = bookmarksCollection
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 function formatDate(date: Date): string {
   const d = String(date.getDate()).padStart(2, '0');
   const m = String(date.getMonth() + 1).padStart(2, '0');
   const y = String(date.getFullYear()).slice(-2);
   return `${d}/${m}/${y}`;
-}
-
-function formatBookmarkDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return formatDate(date);
 }
 
 function extractDomain(url: string): string {
@@ -37,6 +26,6 @@ function extractDomain(url: string): string {
 
 <details open>
   <summary>bookmarks</summary>
-<pre set:html={bookmarks.map(b => `<span class="muted">${formatBookmarkDate(b.date)}</span>    <a href="${b.url}">${b.title}</a> <span class="muted">(${extractDomain(b.url)})</span>`).join('\n')} />
+<pre set:html={bookmarks.map(b => `<span class="muted">${formatDate(b.data.date)}</span>    <a href="${b.data.url}">${b.data.title}</a> <span class="muted">(${extractDomain(b.data.url)})</span>`).join('\n')} />
 </details>
 </Layout>

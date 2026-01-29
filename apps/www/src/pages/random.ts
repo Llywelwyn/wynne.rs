@@ -1,22 +1,14 @@
 import { getCollection } from 'astro:content';
-import yaml from 'js-yaml';
-import bookmarksRaw from '../content/bookmarks.yaml?raw';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { APIContext } from 'astro';
 
 export const prerender = false;
 
-interface Bookmark {
-  date: string;
-  title: string;
-  url: string;
-}
-
 export async function GET(context: APIContext) {
   const site = context.site?.origin ?? 'https://wynne.rs';
   const posts = await getCollection('posts', ({ data }) => data.draft !== true);
-  const bookmarks = yaml.load(bookmarksRaw) as Bookmark[];
+  const bookmarks = await getCollection('bookmarks');
 
   const txtDir = path.join(process.cwd(), 'public/txt');
   const txtFiles = fs.existsSync(txtDir)
@@ -26,7 +18,7 @@ export async function GET(context: APIContext) {
   const urls = [
     ...posts.map(post => `/md/${post.id}`),
     ...txtFiles.map(txt => `/txt/${txt}`),
-    ...bookmarks.map(b => b.url),
+    ...bookmarks.map(b => b.data.url),
   ];
 
   const random = urls[Math.floor(Math.random() * urls.length)];
