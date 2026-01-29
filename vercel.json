@@ -1,4 +1,5 @@
 {
+  "installCommand": "git config --global url.\"https://${GITHUB_ACCESS_TOKEN}@github.com/\".insteadOf \"git@github.com:\" && git submodule update --init --recursive && pnpm install",
   "buildCommand": "pnpm --filter @ily/www build",
   "outputDirectory": "apps/www/dist"
 }
