@@ -1,5 +1,5 @@
 {
-  "name": "@ily/blog",
+  "name": "@ily/www",
   "type": "module",
   "scripts": {
     "dev": "astro dev --port 4322",
