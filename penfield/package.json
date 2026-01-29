@@ -1,6 +1,7 @@
 {
   "name": "@ily/penfield",
   "type": "module",
+  "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
