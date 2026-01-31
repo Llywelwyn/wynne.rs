@@ -1,34 +1,19 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
-import fs from 'node:fs';
-import path from 'node:path';
 import type { APIContext } from 'astro';
-import { getGitDate } from '../utils';
-
-interface TxtFile {
-  name: string;
-  date: Date;
-}
+import { getTxtFiles } from '../lib/txt';
+import { getSlug } from '../utils';
 
 export async function GET(context: APIContext) {
-  const posts = await getCollection('posts', ({ data }) => data.draft !== true);
+  const posts = await getCollection('md', ({ data }) => data.draft !== true);
   const bookmarks = await getCollection('bookmarks');
-
-  const txtDir = path.join(process.cwd(), 'public/txt');
-  const txtFiles: TxtFile[] = fs.existsSync(txtDir)
-    ? fs.readdirSync(txtDir)
-        .filter(file => file.endsWith('.txt'))
-        .map(name => ({
-          name,
-          date: getGitDate(path.join(txtDir, name)),
-        }))
-    : [];
+  const txtFiles = getTxtFiles();
 
   const items = [
     ...posts.map(post => ({
       title: post.data.title,
       pubDate: post.data.date,
-      link: `/md/${post.id}`,
+      link: `/md/${getSlug(post.id)}`,
       description: post.data.title,
     })),
     ...txtFiles.map(txt => ({

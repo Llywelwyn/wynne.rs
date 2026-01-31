@@ -1,22 +1,18 @@
 import { getCollection } from 'astro:content';
-import fs from 'node:fs';
-import path from 'node:path';
 import type { APIContext } from 'astro';
+import { getTxtFileNames } from '../lib/txt';
+import { getSlug } from '../utils';
 
 export const prerender = false;
 
 export async function GET(context: APIContext) {
   const site = context.site?.origin ?? 'https://wynne.rs';
-  const posts = await getCollection('posts', ({ data }) => data.draft !== true);
+  const posts = await getCollection('md', ({ data }) => data.draft !== true);
   const bookmarks = await getCollection('bookmarks');
-
-  const txtDir = path.join(process.cwd(), 'public/txt');
-  const txtFiles = fs.existsSync(txtDir)
-    ? fs.readdirSync(txtDir).filter(file => file.endsWith('.txt'))
-    : [];
+  const txtFiles = getTxtFileNames();
 
   const urls = [
-    ...posts.map(post => `/md/${post.id}`),
+    ...posts.map(post => `/md/${getSlug(post.id)}`),
     ...txtFiles.map(txt => `/txt/${txt}`),
     ...bookmarks.map(b => b.data.url),
   ];

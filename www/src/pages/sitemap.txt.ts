@@ -1,7 +1,7 @@
 import { getCollection } from 'astro:content';
-import fs from 'node:fs';
-import path from 'node:path';
 import type { APIContext } from 'astro';
+import { getTxtFileNames } from '../lib/txt';
+import { getSlug } from '../utils';
 
 const SUBDOMAINS = [
   'https://penfield.wynne.rs/',
@@ -9,17 +9,13 @@ const SUBDOMAINS = [
 
 export async function GET(context: APIContext) {
   const site = context.site?.origin ?? 'https://wynne.rs';
-  const posts = await getCollection('posts', ({ data }) => data.draft !== true);
-
-  const txtDir = path.join(process.cwd(), 'public/txt');
-  const txtFiles = fs.existsSync(txtDir)
-    ? fs.readdirSync(txtDir).filter(file => file.endsWith('.txt'))
-    : [];
+  const posts = await getCollection('md', ({ data }) => data.draft !== true);
+  const txtFiles = getTxtFileNames();
 
   const urls = [
     '/',
     '/md',
-    ...posts.map(post => `/md/${post.id}`),
+    ...posts.map(post => `/md/${getSlug(post.id)}`),
     '/txt',
     ...txtFiles.map(txt => `/txt/${txt}`),
     '/bookmarks',

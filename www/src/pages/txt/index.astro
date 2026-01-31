@@ -1,47 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import fs from 'node:fs';
-import path from 'node:path';
-import yaml from 'js-yaml';
-import { getGitDate } from '../../utils';
+import { formatDate } from '../../lib/format';
+import { getTxtFiles } from '../../lib/txt';
 
-interface TxtFile {
-  name: string;
-  date: Date;
-  pinned: boolean;
-}
-
-interface TxtConfig {
-  pinned?: string[];
-}
-
-const txtDir = path.join(process.cwd(), 'public/txt');
-const configPath = path.join(txtDir, 'config.yaml');
-const config: TxtConfig = fs.existsSync(configPath)
-  ? yaml.load(fs.readFileSync(configPath, 'utf8')) as TxtConfig
-  : {};
-const pinnedSet = new Set(config.pinned || []);
-
-const txtFiles: TxtFile[] = fs.existsSync(txtDir)
-  ? fs.readdirSync(txtDir)
-      .filter(file => file.endsWith('.txt'))
-      .map(name => {
-        const filePath = path.join(txtDir, name);
-        return { name, date: getGitDate(filePath), pinned: pinnedSet.has(name) };
-      })
-      .sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        return b.date.getTime() - a.date.getTime();
-      })
-  : [];
-
-function formatDate(date: Date): string {
-  const d = String(date.getDate()).padStart(2, '0');
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const y = String(date.getFullYear()).slice(-2);
-  return `${d}/${m}/${y}`;
-}
+const txtFiles = getTxtFiles();
 ---
 <Layout title="txt - lewis m.w.">
 

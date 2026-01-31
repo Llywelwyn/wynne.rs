@@ -1,19 +1,13 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getApprovedEntries, type GuestbookEntry } from '../../lib/db';
+import { formatDate } from '../../lib/format';
 
 let guestbookEntries: GuestbookEntry[] = [];
 try {
   guestbookEntries = await getApprovedEntries();
 } catch {
   // DB not available during dev without env vars
-}
-
-function formatDate(date: Date): string {
-  const d = String(date.getDate()).padStart(2, '0');
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const y = String(date.getFullYear()).slice(-2);
-  return `${d}/${m}/${y}`;
 }
 ---
 <Layout title="guestbook - lewis m.w.">

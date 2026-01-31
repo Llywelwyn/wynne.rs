@@ -1,24 +1,19 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { formatDate } from '../../lib/format';
+import { getSlug } from '../../utils';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts', ({ data }) => data.draft !== true);
+  const posts = await getCollection('md', ({ data }) => data.draft !== true);
   return posts.map(post => ({
-    params: { slug: post.data.slug },
+    params: { slug: getSlug(post.id) },
     props: { post }
   }));
 }
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-
-function formatDate(date: Date): string {
-  const d = String(date.getDate()).padStart(2, '0');
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const y = String(date.getFullYear()).slice(-2);
-  return `${d}/${m}/${y}`;
-}
 ---
 <Layout title={`${post.data.title} - lewis m.w.`}>
 

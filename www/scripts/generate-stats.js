@@ -11,7 +11,7 @@ function countWords(text) {
 }
 
 // Count blog posts and their words
-const postsDir = path.join(root, 'src/content/posts');
+const postsDir = path.join(root, 'src/content/md');
 const posts = fs.existsSync(postsDir)
   ? fs.readdirSync(postsDir).filter(f => f.endsWith('.md'))
   : [];

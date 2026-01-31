@@ -1,54 +1,34 @@
 import type { APIRoute } from 'astro';
 import { getSession } from 'auth-astro/server';
 import { approveEntry, deleteEntry } from '../../../lib/db';
-import { isAdmin } from '../../../lib/auth';
+import { jsonResponse, errorResponse, requireAdmin } from '../../../lib/api';
 
 export const prerender = false;
 
 export const PATCH: APIRoute = async ({ params, request }) => {
   const session = await getSession(request);
-
-  if (!session?.user?.id || !isAdmin(session.user.id)) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 403,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
+  const authError = requireAdmin(session);
+  if (authError) return authError;
 
   const id = parseInt(params.id!, 10);
   if (isNaN(id)) {
-    return new Response(JSON.stringify({ error: 'Invalid ID' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return errorResponse('Invalid ID', 400);
   }
 
   await approveEntry(id);
-  return new Response(JSON.stringify({ success: true }), {
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return jsonResponse({ success: true });
 };
 
 export const DELETE: APIRoute = async ({ params, request }) => {
   const session = await getSession(request);
-
-  if (!session?.user?.id || !isAdmin(session.user.id)) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 403,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
+  const authError = requireAdmin(session);
+  if (authError) return authError;
 
   const id = parseInt(params.id!, 10);
   if (isNaN(id)) {
-    return new Response(JSON.stringify({ error: 'Invalid ID' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return errorResponse('Invalid ID', 400);
   }
 
   await deleteEntry(id);
-  return new Response(JSON.stringify({ success: true }), {
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return jsonResponse({ success: true });
 };

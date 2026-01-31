@@ -1,46 +1,19 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { formatDate } from '../../lib/format';
+import { organizePostsByCategory } from '../../lib/posts';
+import { getSlug } from '../../utils';
 
-const posts = await getCollection('posts', ({ data }) => data.draft !== true);
-
-// Group by category (default: "posts")
-const grouped = posts.reduce((acc, post) => {
-  const category = post.data.category ?? 'posts';
-  if (!acc[category]) acc[category] = [];
-  acc[category].push(post);
-  return acc;
-}, {} as Record<string, typeof posts>);
-
-// Sort categories: "posts" first, then alphabetically
-const sortedCategories = Object.keys(grouped).sort((a, b) => {
-  if (a === 'posts') return -1;
-  if (b === 'posts') return 1;
-  return a.localeCompare(b);
-});
-
-// Sort posts within each category: pinned first, then by date descending
-for (const category of sortedCategories) {
-  grouped[category].sort((a, b) => {
-    if (a.data.pinned && !b.data.pinned) return -1;
-    if (!a.data.pinned && b.data.pinned) return 1;
-    return b.data.date.getTime() - a.data.date.getTime();
-  });
-}
-
-function formatDate(date: Date): string {
-  const d = String(date.getDate()).padStart(2, '0');
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const y = String(date.getFullYear()).slice(-2);
-  return `${d}/${m}/${y}`;
-}
+const posts = await getCollection('md', ({ data }) => data.draft !== true);
+const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);
 ---
 <Layout title="md - lewis m.w.">
 
 {sortedCategories.map(category => (
 <details open>
   <summary>{category}</summary>
-<pre set:html={grouped[category].map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/md/${post.data.slug}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`).join('\n')} />
+<pre set:html={grouped[category].map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/md/${getSlug(post.id)}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`).join('\n')} />
 </details>
 ))}
 </Layout>

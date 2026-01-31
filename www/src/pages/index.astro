@@ -1,95 +1,26 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import yaml from 'js-yaml';
-import fs from 'node:fs';
-import path from 'node:path';
 import { getApprovedEntries, type GuestbookEntry } from '../lib/db';
-import { getGitDate } from '../utils';
+import { formatDate, extractDomain } from '../lib/format';
+import { organizePostsByCategory } from '../lib/posts';
+import { getTxtFiles } from '../lib/txt';
+import { getSlug } from '../utils';
 
-interface TxtFile {
-  name: string;
-  date: Date;
-  pinned: boolean;
-}
-
-interface TxtConfig {
-  pinned?: string[];
-}
-
-const posts = await getCollection('posts', ({ data }) => data.draft !== true);
-
-// Group by category (default: "posts")
-const grouped = posts.reduce((acc, post) => {
-  const category = post.data.category ?? 'posts';
-  if (!acc[category]) acc[category] = [];
-  acc[category].push(post);
-  return acc;
-}, {} as Record<string, typeof posts>);
-
-// Sort categories: "posts" first, then alphabetically
-const sortedCategories = Object.keys(grouped).sort((a, b) => {
-  if (a === 'posts') return -1;
-  if (b === 'posts') return 1;
-  return a.localeCompare(b);
-});
-
-// Sort posts within each category: pinned first, then by date descending
-for (const category of sortedCategories) {
-  grouped[category].sort((a, b) => {
-    if (a.data.pinned && !b.data.pinned) return -1;
-    if (!a.data.pinned && b.data.pinned) return 1;
-    return b.data.date.getTime() - a.data.date.getTime();
-  });
-}
+const posts = await getCollection('md', ({ data }) => data.draft !== true);
+const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);
 
 const bookmarksCollection = await getCollection('bookmarks');
 const bookmarks = bookmarksCollection
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-// Auto-discover txt files from public/txt/
-const txtDir = path.join(process.cwd(), 'public/txt');
-const txtConfigPath = path.join(txtDir, 'config.yaml');
-const txtConfig: TxtConfig = fs.existsSync(txtConfigPath)
-  ? yaml.load(fs.readFileSync(txtConfigPath, 'utf8')) as TxtConfig
-  : {};
-const pinnedSet = new Set(txtConfig.pinned || []);
-
-const txtFiles: TxtFile[] = fs.existsSync(txtDir)
-  ? fs.readdirSync(txtDir)
-      .filter(file => file.endsWith('.txt'))
-      .map(name => {
-        const filePath = path.join(txtDir, name);
-        return { name, date: getGitDate(filePath), pinned: pinnedSet.has(name) };
-      })
-      .sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        return b.date.getTime() - a.date.getTime();
-      })
-  : [];
+const txtFiles = getTxtFiles();
 
 let guestbookEntries: GuestbookEntry[] = [];
 try {
   guestbookEntries = await getApprovedEntries();
 } catch {
   // DB not available during dev without env vars
-}
-
-function formatDate(date: Date): string {
-  const d = String(date.getDate()).padStart(2, '0');
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const y = String(date.getFullYear()).slice(-2);
-  return `${d}/${m}/${y}`;
-}
-
-function extractDomain(url: string): string {
-  try {
-    const parsed = new URL(url);
-    return parsed.hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
 }
 ---
 <Layout title="lewis m.w." isHome>
@@ -100,7 +31,7 @@ function extractDomain(url: string): string {
 <details open>
   <summary>{category}</summary>
 <pre set:html={[
-  ...categoryPosts.slice(0, 10).map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/md/${post.id}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`),
+  ...categoryPosts.slice(0, 10).map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/md/${getSlug(post.id)}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`),
   ...(categoryPosts.length > 10 ? [`<a href="/md/">+${categoryPosts.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
