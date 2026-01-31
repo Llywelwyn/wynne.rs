@@ -1,11 +1,15 @@
 import { execSync } from 'node:child_process';
+import path from 'node:path';
 
 export function getGitCreationDate(filePath: string): Date {
   try {
+    // Run git from the file's directory to handle submodules
+    const dir = path.dirname(filePath);
+    const file = path.basename(filePath);
     // Get the oldest commit for this file (first commit that added it)
     const timestamp = execSync(
-      `git log --follow --diff-filter=A --format=%cI -- "${filePath}"`,
-      { encoding: 'utf8' }
+      `git log --follow --diff-filter=A --format=%cI -- "${file}"`,
+      { encoding: 'utf8', cwd: dir }
     ).trim();
     return timestamp ? new Date(timestamp) : new Date(0);
   } catch {
@@ -15,9 +19,12 @@ export function getGitCreationDate(filePath: string): Date {
 
 export function getGitLastModifiedDate(filePath: string): Date {
   try {
+    // Run git from the file's directory to handle submodules
+    const dir = path.dirname(filePath);
+    const file = path.basename(filePath);
     const timestamp = execSync(
-      `git log -1 --format=%cI -- "${filePath}"`,
-      { encoding: 'utf8' }
+      `git log -1 --format=%cI -- "${file}"`,
+      { encoding: 'utf8', cwd: dir }
     ).trim();
     return timestamp ? new Date(timestamp) : new Date(0);
   } catch {

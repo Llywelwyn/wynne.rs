@@ -3,10 +3,11 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { getApprovedEntries, type GuestbookEntry } from '../lib/db';
 import { formatDate, extractDomain, formatListItem } from '../lib/format';
-import { organizePostsByCategory, getSlug } from '../lib/md';
+import { organizePostsByCategory, getSlug, enrichPostsWithDates } from '../lib/md';
 import { getTxtFiles } from '../lib/txt';
 
-const posts = await getCollection('md', ({ data }) => data.draft !== true);
+const rawPosts = await getCollection('md', ({ data }) => data.draft !== true);
+const posts = enrichPostsWithDates(rawPosts);
 const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);
 
 const bookmarksCollection = await getCollection('bookmarks');
@@ -30,7 +31,7 @@ try {
 <details open>
   <summary>{category}</summary>
 <pre set:html={[
-  ...categoryPosts.slice(0, 10).map(post => formatListItem(post.data.date, `/md/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })),
+  ...categoryPosts.slice(0, 10).map(post => formatListItem(post.dates.created, `/md/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })),
   ...(categoryPosts.length > 10 ? [`<a href="/md/">+${categoryPosts.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
