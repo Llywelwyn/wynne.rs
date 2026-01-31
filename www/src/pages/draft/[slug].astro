@@ -5,27 +5,28 @@ import { getCollection, render } from 'astro:content';
 import { requireAdminSession } from '../../lib/auth';
 import Layout from '../../layouts/Layout.astro';
 import { formatDate } from '../../lib/format';
-import { getSlug } from '../../lib/md';
+import { getSlug, enrichPostWithDates } from '../../lib/md';
 
 const { session, error } = await requireAdminSession(Astro.request);
 if (error) return error;
 if (!session) return Astro.redirect('/api/auth/signin');
 
 const slug = Astro.params.slug;
-const posts = await getCollection('md', ({ data }) => data.draft === true);
-const post = posts.find(p => getSlug(p.id) === slug);
+const rawPosts = await getCollection('md', ({ data }) => data.draft === true);
+const rawPost = rawPosts.find(p => getSlug(p.id) === slug);
 
-if (!post) {
+if (!rawPost) {
   return new Response('Not found', { status: 404 });
 }
 
+const post = enrichPostWithDates(rawPost);
 const { Content } = await render(post);
 ---
 <Layout title={`${post.data.title} - lewis m.w.`}>
 
 <article>
 <h1>{post.data.title}</h1>
-<p class="muted" style="margin-top: 0;">{formatDate(post.data.date)}</p>
+<p class="muted" style="margin-top: 0;">{formatDate(post.dates.created)}{post.dates.updated && ` (updated ${formatDate(post.dates.updated)})`}</p>
 <Content />
 </article>
 </Layout>

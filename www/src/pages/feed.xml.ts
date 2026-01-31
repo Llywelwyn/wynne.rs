@@ -1,18 +1,19 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
-import { getSlug } from '../lib/md';
+import { getSlug, enrichPostsWithDates } from '../lib/md';
 import { getTxtFiles } from '../lib/txt';
 
 export async function GET(context: APIContext) {
-  const posts = await getCollection('md', ({ data }) => data.draft !== true);
+  const rawPosts = await getCollection('md', ({ data }) => data.draft !== true);
+  const posts = enrichPostsWithDates(rawPosts);
   const bookmarks = await getCollection('bookmarks');
   const txtFiles = getTxtFiles();
 
   const items = [
     ...posts.map(post => ({
       title: post.data.title,
-      pubDate: post.data.date,
+      pubDate: post.dates.created,
       link: `/md/${getSlug(post.id)}`,
       description: post.data.title,
     })),

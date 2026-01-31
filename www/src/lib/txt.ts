@@ -1,17 +1,8 @@
-import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
 import { sortByPinnedThenDate } from './format';
-
-function getGitDate(filePath: string): Date {
-  try {
-    const timestamp = execSync(`git log -1 --format=%cI -- "${filePath}"`, { encoding: 'utf8' }).trim();
-    return timestamp ? new Date(timestamp) : new Date(0);
-  } catch {
-    return new Date(0);
-  }
-}
+import { getGitLastModifiedDate } from './git';
 
 export interface TxtFile {
   name: string;
@@ -45,7 +36,7 @@ export function getTxtFiles(): TxtFile[] {
     .filter(file => file.endsWith('.txt'))
     .map(name => ({
       name,
-      date: getGitDate(path.join(txtDir, name)),
+      date: getGitLastModifiedDate(path.join(txtDir, name)),
       pinned: pinnedSet.has(name),
     }));
   return sortByPinnedThenDate(files);
