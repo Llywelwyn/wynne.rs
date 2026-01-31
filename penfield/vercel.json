@@ -1,3 +1,5 @@
 {
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- ."
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm --filter @ily/penfield build",
+  "outputDirectory": "dist"
 }
