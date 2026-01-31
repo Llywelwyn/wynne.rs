@@ -11,6 +11,7 @@ const posts = defineCollection({
     pinned: z.boolean().optional(),
     category: z.string().optional(),
     draft: z.boolean().optional(),
+    slug: z.string(),
   })
 });
 

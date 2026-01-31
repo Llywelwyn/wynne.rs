@@ -40,7 +40,7 @@ function formatDate(date: Date): string {
 {sortedCategories.map(category => (
 <details open>
   <summary>{category}</summary>
-<pre set:html={grouped[category].map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/md/${post.id}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`).join('\n')} />
+<pre set:html={grouped[category].map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/md/${post.data.slug}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`).join('\n')} />
 </details>
 ))}
 </Layout>
