@@ -19,9 +19,13 @@ function getPostFilePath(post: Post): string {
 
 export function enrichPostWithDates(post: Post): PostWithDates {
   const filePath = getPostFilePath(post);
+  const gitDates = getGitDates(filePath);
   return {
     ...post,
-    dates: getGitDates(filePath),
+    dates: {
+      created: post.data.date ?? gitDates.created,
+      updated: gitDates.updated,
+    },
   };
 }
 
