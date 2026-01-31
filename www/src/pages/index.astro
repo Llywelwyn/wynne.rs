@@ -2,8 +2,8 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { getApprovedEntries, type GuestbookEntry } from '../lib/db';
-import { formatDate, extractDomain } from '../lib/format';
-import { organizePostsByCategory, getSlug } from '../lib/posts';
+import { formatDate, extractDomain, formatListItem } from '../lib/format';
+import { organizePostsByCategory, getSlug } from '../lib/md';
 import { getTxtFiles } from '../lib/txt';
 
 const posts = await getCollection('md', ({ data }) => data.draft !== true);
@@ -30,7 +30,7 @@ try {
 <details open>
   <summary>{category}</summary>
 <pre set:html={[
-  ...categoryPosts.slice(0, 10).map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/md/${getSlug(post.id)}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`),
+  ...categoryPosts.slice(0, 10).map(post => formatListItem(post.data.date, `/md/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })),
   ...(categoryPosts.length > 10 ? [`<a href="/md/">+${categoryPosts.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
@@ -40,7 +40,7 @@ try {
 <details open>
   <summary>txt</summary>
 <pre set:html={[
-  ...txtFiles.slice(0, 10).map(f => `<span class="muted">${formatDate(f.date)}</span>    <a href="/txt/${f.name}">${f.name}</a>${f.pinned ? ' [pinned]' : ''}`),
+  ...txtFiles.slice(0, 10).map(f => formatListItem(f.date, `/txt/${f.name}`, f.name, { pinned: f.pinned })),
   ...(txtFiles.length > 10 ? [`<a href="/txt/">+${txtFiles.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
@@ -48,7 +48,7 @@ try {
 <details open>
   <summary>bookmarks</summary>
 <pre set:html={[
-  ...bookmarks.slice(0, 10).map(b => `<span class="muted">${formatDate(b.data.date)}</span>    <a href="${b.data.url}">${b.data.title}</a> <span class="muted">(${extractDomain(b.data.url)})</span>`),
+  ...bookmarks.slice(0, 10).map(b => formatListItem(b.data.date, b.data.url, b.data.title, { suffix: `<span class="muted">(${extractDomain(b.data.url)})</span>` })),
   ...(bookmarks.length > 10 ? [`<a href="/bookmarks/">+${bookmarks.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
@@ -70,33 +70,7 @@ try {
 </details>
 
 <script>
-  document.getElementById('sign-guestbook')?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const status = document.getElementById('guestbook-status')!;
-
-    const name = prompt('name:');
-    if (!name) return;
-
-    const message = prompt('message:');
-    if (!message) return;
-
-    const url = prompt('url (optional):');
-
-    try {
-      const res = await fetch('/api/guestbook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, message, url: url || null }),
-      });
-
-      if (res.ok) {
-        status.textContent = ' thanks! pending approval.';
-      } else {
-        status.textContent = ' error';
-      }
-    } catch {
-      status.textContent = ' failed';
-    }
-  });
+  import { initGuestbookSign } from '../scripts/guestbook-sign';
+  initGuestbookSign();
 </script>
 </Layout>

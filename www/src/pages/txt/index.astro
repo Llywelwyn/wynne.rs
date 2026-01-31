@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { formatDate } from '../../lib/format';
+import { formatListItem } from '../../lib/format';
 import { getTxtFiles } from '../../lib/txt';
 
 const txtFiles = getTxtFiles();
@@ -9,6 +9,6 @@ const txtFiles = getTxtFiles();
 
 <details open>
   <summary>txt</summary>
-<pre set:html={txtFiles.map(f => `<span class="muted">${formatDate(f.date)}</span>    <a href="/txt/${f.name}">${f.name}</a>${f.pinned ? ' [pinned]' : ''}`).join('\n')} />
+<pre set:html={txtFiles.map(f => formatListItem(f.date, `/txt/${f.name}`, f.name, { pinned: f.pinned })).join('\n')} />
 </details>
 </Layout>

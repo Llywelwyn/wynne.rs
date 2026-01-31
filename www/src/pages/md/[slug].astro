@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { formatDate } from '../../lib/format';
-import { getSlug } from '../../lib/posts';
+import { getSlug } from '../../lib/md';
 
 export async function getStaticPaths() {
   const posts = await getCollection('md', ({ data }) => data.draft !== true);

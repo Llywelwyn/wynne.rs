@@ -7,7 +7,7 @@ export function getSlug(postId: string): string {
   return parts[parts.length - 1];
 }
 
-export function sortPosts(posts: Post[]): Post[] {
+function sortPosts(posts: Post[]): Post[] {
   return posts.slice().sort((a, b) => {
     if (a.data.pinned && !b.data.pinned) return -1;
     if (!a.data.pinned && b.data.pinned) return 1;

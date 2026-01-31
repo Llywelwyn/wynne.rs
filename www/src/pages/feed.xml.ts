@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
-import { getSlug } from '../lib/posts';
+import { getSlug } from '../lib/md';
 import { getTxtFiles } from '../lib/txt';
 
 export async function GET(context: APIContext) {

@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
-import { getSlug } from '../lib/posts';
+import { getSlug } from '../lib/md';
 import { getTxtFileNames } from '../lib/txt';
 
 export const prerender = false;

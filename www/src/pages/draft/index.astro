@@ -1,27 +1,15 @@
 ---
 export const prerender = false;
 
-import { getSession } from 'auth-astro/server';
 import { getCollection } from 'astro:content';
-import { isAdmin } from '../../lib/auth';
+import { requireAdminSession } from '../../lib/auth';
 import Layout from '../../layouts/Layout.astro';
-import { formatDate } from '../../lib/format';
-import { organizePostsByCategory, getSlug } from '../../lib/posts';
+import { formatListItem } from '../../lib/format';
+import { organizePostsByCategory, getSlug } from '../../lib/md';
 
-let session;
-try {
-  session = await getSession(Astro.request);
-} catch {
-  return new Response('Auth not configured', { status: 500 });
-}
-
-if (!session) {
-  return Astro.redirect('/api/auth/signin');
-}
-
-if (!isAdmin(session.user?.id)) {
-  return new Response('Forbidden', { status: 403 });
-}
+const { session, error } = await requireAdminSession(Astro.request);
+if (error) return error;
+if (!session) return Astro.redirect('/api/auth/signin');
 
 const posts = await getCollection('md', ({ data }) => data.draft === true);
 const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);
@@ -36,7 +24,7 @@ const { grouped, categories: sortedCategories } = organizePostsByCategory(posts)
   sortedCategories.map(category => (
     <details open>
       <summary>{category}</summary>
-      <pre set:html={grouped[category].map(post => `<span class="muted">${formatDate(post.data.date)}</span>    <a href="/draft/${getSlug(post.id)}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`).join('\n')} />
+      <pre set:html={grouped[category].map(post => formatListItem(post.data.date, `/draft/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })).join('\n')} />
     </details>
   ))
 )}

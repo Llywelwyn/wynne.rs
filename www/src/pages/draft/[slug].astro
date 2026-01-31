@@ -1,27 +1,15 @@
 ---
 export const prerender = false;
 
-import { getSession } from 'auth-astro/server';
 import { getCollection, render } from 'astro:content';
-import { isAdmin } from '../../lib/auth';
+import { requireAdminSession } from '../../lib/auth';
 import Layout from '../../layouts/Layout.astro';
 import { formatDate } from '../../lib/format';
-import { getSlug } from '../../lib/posts';
+import { getSlug } from '../../lib/md';
 
-let session;
-try {
-  session = await getSession(Astro.request);
-} catch {
-  return new Response('Auth not configured', { status: 500 });
-}
-
-if (!session) {
-  return Astro.redirect('/api/auth/signin');
-}
-
-if (!isAdmin(session.user?.id)) {
-  return new Response('Forbidden', { status: 403 });
-}
+const { session, error } = await requireAdminSession(Astro.request);
+if (error) return error;
+if (!session) return Astro.redirect('/api/auth/signin');
 
 const slug = Astro.params.slug;
 const posts = await getCollection('md', ({ data }) => data.draft === true);

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { formatDate, extractDomain } from '../../lib/format';
+import { formatListItem, extractDomain } from '../../lib/format';
 
 const bookmarksCollection = await getCollection('bookmarks');
 const bookmarks = bookmarksCollection
@@ -11,6 +11,6 @@ const bookmarks = bookmarksCollection
 
 <details open>
   <summary>bookmarks</summary>
-<pre set:html={bookmarks.map(b => `<span class="muted">${formatDate(b.data.date)}</span>    <a href="${b.data.url}">${b.data.title}</a> <span class="muted">(${extractDomain(b.data.url)})</span>`).join('\n')} />
+<pre set:html={bookmarks.map(b => formatListItem(b.data.date, b.data.url, b.data.title, { suffix: `<span class="muted">(${extractDomain(b.data.url)})</span>` })).join('\n')} />
 </details>
 </Layout>

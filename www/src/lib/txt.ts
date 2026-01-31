@@ -2,6 +2,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
+import { sortByPinnedThenDate } from './format';
 
 function getGitDate(filePath: string): Date {
   try {
@@ -40,18 +41,14 @@ export function getTxtFiles(): TxtFile[] {
   const config = loadTxtConfig();
   const pinnedSet = new Set(config.pinned || []);
 
-  return fs.readdirSync(txtDir)
+  const files = fs.readdirSync(txtDir)
     .filter(file => file.endsWith('.txt'))
     .map(name => ({
       name,
       date: getGitDate(path.join(txtDir, name)),
       pinned: pinnedSet.has(name),
-    }))
-    .sort((a, b) => {
-      if (a.pinned && !b.pinned) return -1;
-      if (!a.pinned && b.pinned) return 1;
-      return b.date.getTime() - a.date.getTime();
-    });
+    }));
+  return sortByPinnedThenDate(files);
 }
 
 export function getTxtFileNames(): string[] {
