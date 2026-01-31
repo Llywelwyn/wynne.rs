@@ -1,7 +1,7 @@
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
+import { getSlug } from '../lib/posts';
 import { getTxtFileNames } from '../lib/txt';
-import { getSlug } from '../utils';
 
 const SUBDOMAINS = [
   'https://penfield.wynne.rs/',

@@ -2,8 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { formatDate } from '../../lib/format';
-import { organizePostsByCategory } from '../../lib/posts';
-import { getSlug } from '../../utils';
+import { organizePostsByCategory, getSlug } from '../../lib/posts';
 
 const posts = await getCollection('md', ({ data }) => data.draft !== true);
 const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);

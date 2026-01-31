@@ -1,7 +1,16 @@
+import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
-import { getGitDate } from '../utils';
+
+function getGitDate(filePath: string): Date {
+  try {
+    const timestamp = execSync(`git log -1 --format=%cI -- "${filePath}"`, { encoding: 'utf8' }).trim();
+    return timestamp ? new Date(timestamp) : new Date(0);
+  } catch {
+    return new Date(0);
+  }
+}
 
 export interface TxtFile {
   name: string;

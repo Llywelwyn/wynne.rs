@@ -3,9 +3,8 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { getApprovedEntries, type GuestbookEntry } from '../lib/db';
 import { formatDate, extractDomain } from '../lib/format';
-import { organizePostsByCategory } from '../lib/posts';
+import { organizePostsByCategory, getSlug } from '../lib/posts';
 import { getTxtFiles } from '../lib/txt';
-import { getSlug } from '../utils';
 
 const posts = await getCollection('md', ({ data }) => data.draft !== true);
 const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);
