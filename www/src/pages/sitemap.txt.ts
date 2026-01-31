@@ -17,7 +17,7 @@ export async function GET(context: APIContext) {
     '/md',
     ...posts.map(post => `/md/${getSlug(post.id)}`),
     '/txt',
-    ...txtFiles.map(txt => `/txt/${txt}`),
+    ...txtFiles.map(txt => `/${txt}`),
     '/bookmarks',
     '/guestbook',
   ].map(p => `${site}${p}`);

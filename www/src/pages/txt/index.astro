@@ -9,6 +9,6 @@ const txtFiles = getTxtFiles();
 
 <details open>
   <summary>txt</summary>
-<pre set:html={txtFiles.map(f => formatListItem(f.date, `/txt/${f.name}`, f.name, { pinned: f.pinned })).join('\n')} />
+<pre set:html={txtFiles.map(f => formatListItem(f.date, `/${f.name}`, f.name, { pinned: f.pinned })).join('\n')} />
 </details>
 </Layout>

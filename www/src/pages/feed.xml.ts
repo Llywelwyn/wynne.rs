@@ -19,7 +19,7 @@ export async function GET(context: APIContext) {
     ...txtFiles.map(txt => ({
       title: txt.name,
       pubDate: txt.date,
-      link: `/txt/${txt.name}`,
+      link: `/${txt.name}`,
       description: txt.name,
     })),
     ...bookmarks.map(b => ({

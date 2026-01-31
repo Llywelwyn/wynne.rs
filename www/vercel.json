@@ -1,5 +1,8 @@
 {
   "installCommand": "../install.sh",
   "buildCommand": "pnpm --filter @ily/www build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/txt/now.txt", "destination": "/now.txt", "permanent": true }
+  ]
 }

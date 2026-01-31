@@ -24,7 +24,7 @@ export interface TxtConfig {
 }
 
 export function getTxtDir(): string {
-  return path.join(process.cwd(), 'public/txt');
+  return path.join(process.cwd(), 'public');
 }
 
 export function loadTxtConfig(): TxtConfig {

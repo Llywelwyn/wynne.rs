@@ -40,7 +40,7 @@ try {
 <details open>
   <summary>txt</summary>
 <pre set:html={[
-  ...txtFiles.slice(0, 10).map(f => formatListItem(f.date, `/txt/${f.name}`, f.name, { pinned: f.pinned })),
+  ...txtFiles.slice(0, 10).map(f => formatListItem(f.date, `/${f.name}`, f.name, { pinned: f.pinned })),
   ...(txtFiles.length > 10 ? [`<a href="/txt/">+${txtFiles.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>

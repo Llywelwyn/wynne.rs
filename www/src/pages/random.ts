@@ -13,7 +13,7 @@ export async function GET(context: APIContext) {
 
   const urls = [
     ...posts.map(post => `/md/${getSlug(post.id)}`),
-    ...txtFiles.map(txt => `/txt/${txt}`),
+    ...txtFiles.map(txt => `/${txt}`),
     ...bookmarks.map(b => b.data.url),
   ];
 

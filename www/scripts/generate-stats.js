@@ -24,13 +24,13 @@ for (const post of posts) {
 }
 
 // Count txt files and their words (excluding stats.txt which we're generating)
-const txtDir = path.join(root, 'public/txt');
-const txtFiles = fs.existsSync(txtDir)
-  ? fs.readdirSync(txtDir).filter(f => f.endsWith('.txt') && f !== 'stats.txt')
+const publicDir = path.join(root, 'public');
+const txtFiles = fs.existsSync(publicDir)
+  ? fs.readdirSync(publicDir).filter(f => f.endsWith('.txt') && f !== 'stats.txt')
   : [];
 let txtWords = 0;
 for (const txt of txtFiles) {
-  const content = fs.readFileSync(path.join(txtDir, txt), 'utf-8');
+  const content = fs.readFileSync(path.join(publicDir, txt), 'utf-8');
   txtWords += countWords(content);
 }
 
@@ -51,8 +51,8 @@ if (fs.existsSync(guestbookJsonFile)) {
 // Calculate totals (excluding stats.txt words for now, we'll add them after generating)
 const totalPages = 1 + 1 + posts.length + 1 + txtFiles.length + 1 + 1; // home, blog index, posts, txt index, txts, bookmarks, guestbook
 
-// Read template from public/txt/stats.txt and replace placeholders
-const template = fs.readFileSync(path.join(root, 'public/txt/stats.txt'), 'utf-8');
+// Read template from public/stats.txt and replace placeholders
+const template = fs.readFileSync(path.join(root, 'public/stats.txt'), 'utf-8');
 
 // First pass: generate stats without stats.txt word count
 let stats = template
@@ -70,7 +70,7 @@ const totalWords = postWords + txtWords + statsWords;
 stats = stats.replace('[WORDS]', totalWords.toString());
 
 // Write to Vercel output
-const outputDir = path.join(root, '.vercel/output/static/txt');
+const outputDir = path.join(root, '.vercel/output/static');
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
