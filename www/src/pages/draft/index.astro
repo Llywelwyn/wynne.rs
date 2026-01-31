@@ -5,13 +5,14 @@ import { getCollection } from 'astro:content';
 import { requireAdminSession } from '../../lib/auth';
 import Layout from '../../layouts/Layout.astro';
 import { formatListItem } from '../../lib/format';
-import { organizePostsByCategory, getSlug } from '../../lib/md';
+import { organizePostsByCategory, getSlug, enrichPostsWithDates } from '../../lib/md';
 
 const { session, error } = await requireAdminSession(Astro.request);
 if (error) return error;
 if (!session) return Astro.redirect('/api/auth/signin');
 
-const posts = await getCollection('md', ({ data }) => data.draft === true);
+const rawPosts = await getCollection('md', ({ data }) => data.draft === true);
+const posts = enrichPostsWithDates(rawPosts);
 const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);
 ---
 <Layout title="drafts - lewis m.w.">
@@ -24,7 +25,7 @@ const { grouped, categories: sortedCategories } = organizePostsByCategory(posts)
   sortedCategories.map(category => (
     <details open>
       <summary>{category}</summary>
-      <pre set:html={grouped[category].map(post => formatListItem(post.data.date, `/draft/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })).join('\n')} />
+      <pre set:html={grouped[category].map(post => formatListItem(post.dates.created, `/draft/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })).join('\n')} />
     </details>
   ))
 )}
