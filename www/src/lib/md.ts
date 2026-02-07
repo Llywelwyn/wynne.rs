@@ -33,10 +33,11 @@ export function enrichPostsWithDates(posts: Post[]): PostWithDates[] {
   return posts.map(enrichPostWithDates);
 }
 
-function sortPosts(posts: PostWithDates[]): PostWithDates[] {
+function sortPosts(posts: PostWithDates[], { alphabetically = false } = {}): PostWithDates[] {
   return posts.slice().sort((a, b) => {
     if (a.data.pinned && !b.data.pinned) return -1;
     if (!a.data.pinned && b.data.pinned) return 1;
+    if (alphabetically) return a.data.title.localeCompare(b.data.title);
     return b.dates.created.getTime() - a.dates.created.getTime();
   });
 }
@@ -49,7 +50,7 @@ export function resolveRelatedPosts(
   return slugs.flatMap(s => bySlug.get(s) ?? []);
 }
 
-export function organizePostsByCategory(posts: PostWithDates[]): {
+export function organizePostsByCategory(posts: PostWithDates[], { sortAlphabetically = false } = {}): {
   grouped: Record<string, PostWithDates[]>;
   categories: string[];
 } {
@@ -67,7 +68,7 @@ export function organizePostsByCategory(posts: PostWithDates[]): {
   });
 
   for (const category of categories) {
-    grouped[category] = sortPosts(grouped[category]);
+    grouped[category] = sortPosts(grouped[category], { alphabetically: sortAlphabetically });
   }
 
   return { grouped, categories };

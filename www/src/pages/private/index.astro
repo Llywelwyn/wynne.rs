@@ -13,19 +13,19 @@ if (!session) return Astro.redirect('/api/auth/signin');
 
 const rawPosts = await getCollection('md', ({ data }) => data.draft === true);
 const posts = enrichPostsWithDates(rawPosts);
-const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);
+const { grouped, categories: sortedCategories } = organizePostsByCategory(posts, { sortAlphabetically: true });
 ---
-<Layout title="drafts - lewis m.w.">
+<Layout title="private - lewis m.w.">
 
 <p class="muted">logged in as {session.user?.name} <a href="/api/auth/signout">sign out</a></p>
 
 {sortedCategories.length === 0 ? (
-  <p class="muted">no drafts</p>
+  <p class="muted">nothing here</p>
 ) : (
   sortedCategories.map(category => (
     <details open>
       <summary>{category}</summary>
-      <pre set:html={grouped[category].map(post => formatListItem(post.dates.created, `/draft/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })).join('\n')} />
+      <pre set:html={grouped[category].map(post => formatListItem(post.dates.created, `/private/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })).join('\n')} />
     </details>
   ))
 )}

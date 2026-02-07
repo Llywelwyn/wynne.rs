@@ -34,7 +34,7 @@ const related = post.data.related ? resolveRelatedPosts(post.data.related, allPo
 {related.length > 0 && (
   <details open>
     <summary>related</summary>
-    <pre set:html={related.map(p => formatListItem(p.dates.created, `/draft/${getSlug(p.id)}`, p.data.title)).join('\n')} />
+    <pre set:html={related.map(p => formatListItem(p.dates.created, `/private/${getSlug(p.id)}`, p.data.title)).join('\n')} />
   </details>
 )}
 </Layout>
