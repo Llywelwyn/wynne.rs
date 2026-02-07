@@ -6,6 +6,7 @@ import { requireAdminSession } from '../../lib/auth';
 import Layout from '../../layouts/Layout.astro';
 import { formatListItem } from '../../lib/format';
 import { organizePostsByCategory, getSlug, enrichPostsWithDates } from '../../lib/md';
+import map from '../../content/md/dnd/drakkenheim/map.jpg';
 
 const { session, error } = await requireAdminSession(Astro.request);
 if (error) return error;
@@ -18,6 +19,8 @@ const { grouped, categories: sortedCategories } = organizePostsByCategory(posts,
 <Layout title="private - lewis m.w.">
 
 <p class="muted">logged in as {session.user?.name} <a href="/api/auth/signout">sign out</a></p>
+
+<img src={map.src} alt="Drakkenheim map" />
 
 {sortedCategories.length === 0 ? (
   <p class="muted">nothing here</p>
