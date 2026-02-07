@@ -1,2 +1,3 @@
+2026-02-07 - related posts !
 2026-01-31 - text files now live at cleaner URLs (/*.txt instead of /txt/*.txt)
 2026-01-23 - hello. we've got the skeleton of something here
