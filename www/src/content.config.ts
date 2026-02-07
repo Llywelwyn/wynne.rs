@@ -11,6 +11,7 @@ const md = defineCollection({
     pinned: z.boolean().optional(),
     category: z.string().optional(),
     draft: z.boolean().optional(),
+    related: z.array(z.string()).optional(),
   })
 });
 

@@ -41,6 +41,14 @@ function sortPosts(posts: PostWithDates[]): PostWithDates[] {
   });
 }
 
+export function resolveRelatedPosts(
+  slugs: string[],
+  allPosts: PostWithDates[],
+): PostWithDates[] {
+  const bySlug = new Map(allPosts.map(p => [getSlug(p.id), p]));
+  return slugs.flatMap(s => bySlug.get(s) ?? []);
+}
+
 export function organizePostsByCategory(posts: PostWithDates[]): {
   grouped: Record<string, PostWithDates[]>;
   categories: string[];
