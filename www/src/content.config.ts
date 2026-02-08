@@ -10,7 +10,16 @@ const md = defineCollection({
     date: z.coerce.date().optional(),
     pinned: z.boolean().optional(),
     category: z.string().optional(),
-    draft: z.boolean().optional(),
+    related: z.array(z.string()).optional(),
+  })
+});
+
+const dnd = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/dnd' }),
+  schema: z.object({
+    title: z.string(),
+    pinned: z.boolean().optional(),
+    category: z.string().optional(),
     related: z.array(z.string()).optional(),
   })
 });
@@ -29,4 +38,4 @@ const bookmarks = defineCollection({
   })
 });
 
-export const collections = { md, bookmarks };
+export const collections = { md, dnd, bookmarks };
