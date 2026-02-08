@@ -42,10 +42,10 @@ function sortPosts(posts: PostWithDates[], { alphabetically = false } = {}): Pos
   });
 }
 
-export function resolveRelatedPosts(
+export function resolveRelatedPosts<T extends { id: string }>(
   slugs: string[],
-  allPosts: PostWithDates[],
-): PostWithDates[] {
+  allPosts: T[],
+): T[] {
   const bySlug = new Map(allPosts.map(p => [getSlug(p.id), p]));
   return slugs.flatMap(s => bySlug.get(s) ?? []);
 }
