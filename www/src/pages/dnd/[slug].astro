@@ -1,0 +1,38 @@
+---
+export const prerender = false;
+
+import { getCollection, render } from 'astro:content';
+import { requireAdminSession } from '../../lib/auth';
+import Layout from '../../layouts/Layout.astro';
+import { getSlug, resolveRelatedPosts } from '../../lib/dnd';
+
+const { session, error } = await requireAdminSession(Astro.request);
+if (error) return error;
+if (!session) return Astro.redirect('/api/auth/signin');
+
+const slug = Astro.params.slug;
+const allPosts = await getCollection('dnd');
+const post = allPosts.find(p => getSlug(p.id) === slug);
+
+if (!post) {
+  return new Response('Not found', { status: 404 });
+}
+
+const { Content } = await render(post);
+const related = post.data.related ? resolveRelatedPosts(post.data.related, allPosts) : [];
+---
+<Layout title={`${post.data.title} - lewis m.w.`}>
+
+<article>
+<h1>{post.data.title}</h1>
+<Content />
+</article>
+{related.length > 0 && (
+  <details open>
+    <summary>related</summary>
+    <pre set:html={related.map(p =>
+      `<a href="/dnd/${getSlug(p.id)}">${p.data.title}</a>`
+    ).join('\n')} />
+  </details>
+)}
+</Layout>

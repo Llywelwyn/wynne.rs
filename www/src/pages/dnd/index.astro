@@ -1,0 +1,35 @@
+---
+export const prerender = false;
+
+import { getCollection } from 'astro:content';
+import { requireAdminSession } from '../../lib/auth';
+import Layout from '../../layouts/Layout.astro';
+import { organizePostsByCategory, getSlug } from '../../lib/dnd';
+import map from '../../content/dnd/drakkenheim/map.jpg';
+
+const { session, error } = await requireAdminSession(Astro.request);
+if (error) return error;
+if (!session) return Astro.redirect('/api/auth/signin');
+
+const posts = await getCollection('dnd');
+const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);
+---
+<Layout title="dnd - lewis m.w.">
+
+<p class="muted">logged in as {session.user?.name} <a href="/api/auth/signout">sign out</a></p>
+
+<img src={map.src} alt="Drakkenheim map" style="max-width: 100%; height: auto;" />
+
+{sortedCategories.length === 0 ? (
+  <p class="muted">nothing here</p>
+) : (
+  sortedCategories.map(category => (
+    <details open>
+      <summary>{category}</summary>
+      <pre set:html={grouped[category].map(post =>
+        `<a href="/dnd/${getSlug(post.id)}">${post.data.title}</a>${post.data.pinned ? ' [pinned]' : ''}`
+      ).join('\n')} />
+    </details>
+  ))
+)}
+</Layout>
