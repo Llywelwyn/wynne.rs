@@ -7,7 +7,7 @@ export const prerender = false;
 
 export async function GET(context: APIContext) {
   const site = context.site?.origin ?? 'https://wynne.rs';
-  const posts = await getCollection('md', ({ data }) => data.draft !== true);
+  const posts = await getCollection('md');
   const bookmarks = await getCollection('bookmarks');
   const txtFiles = getTxtFileNames();
 

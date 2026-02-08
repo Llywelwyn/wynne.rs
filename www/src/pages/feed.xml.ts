@@ -5,7 +5,7 @@ import { getSlug, enrichPostsWithDates } from '../lib/md';
 import { getTxtFiles } from '../lib/txt';
 
 export async function GET(context: APIContext) {
-  const rawPosts = await getCollection('md', ({ data }) => data.draft !== true);
+  const rawPosts = await getCollection('md');
   const posts = enrichPostsWithDates(rawPosts);
   const bookmarks = await getCollection('bookmarks');
   const txtFiles = getTxtFiles();

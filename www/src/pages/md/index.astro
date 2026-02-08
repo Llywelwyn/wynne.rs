@@ -4,7 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import { formatListItem } from '../../lib/format';
 import { organizePostsByCategory, getSlug, enrichPostsWithDates } from '../../lib/md';
 
-const rawPosts = await getCollection('md', ({ data }) => data.draft !== true);
+const rawPosts = await getCollection('md');
 const posts = enrichPostsWithDates(rawPosts);
 const { grouped, categories: sortedCategories } = organizePostsByCategory(posts);
 ---

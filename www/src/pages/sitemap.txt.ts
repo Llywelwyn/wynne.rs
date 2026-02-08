@@ -9,7 +9,7 @@ const SUBDOMAINS = [
 
 export async function GET(context: APIContext) {
   const site = context.site?.origin ?? 'https://wynne.rs';
-  const posts = await getCollection('md', ({ data }) => data.draft !== true);
+  const posts = await getCollection('md');
   const txtFiles = getTxtFileNames();
 
   const urls = [

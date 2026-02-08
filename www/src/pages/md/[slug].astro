@@ -5,7 +5,7 @@ import { formatDate, formatListItem } from '../../lib/format';
 import { getSlug, enrichPostWithDates, enrichPostsWithDates, resolveRelatedPosts } from '../../lib/md';
 
 export async function getStaticPaths() {
-  const rawPosts = await getCollection('md', ({ data }) => data.draft !== true);
+  const rawPosts = await getCollection('md');
   const allPosts = enrichPostsWithDates(rawPosts);
   return allPosts.map(post => ({
     params: { slug: getSlug(post.id) },
