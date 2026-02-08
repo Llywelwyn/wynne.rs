@@ -18,7 +18,7 @@ const { grouped, categories: sortedCategories } = organizePostsByCategory(posts)
 
 <p class="muted">logged in as {session.user?.name} <a href="/api/auth/signout">sign out</a></p>
 
-<img src={map.src} alt="Drakkenheim map" style="max-width: 100%; height: auto;" />
+<img src={map.src} alt="Drakkenheim map" />
 
 {sortedCategories.length === 0 ? (
   <p class="muted">nothing here</p>
