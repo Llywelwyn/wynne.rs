@@ -14,16 +14,6 @@ const md = defineCollection({
   })
 });
 
-const dnd = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/dnd' }),
-  schema: z.object({
-    title: z.string(),
-    pinned: z.boolean().optional(),
-    category: z.string().optional(),
-    related: z.array(z.string()).optional(),
-  })
-});
-
 const bookmarks = defineCollection({
   loader: file('./src/content/bookmarks.yaml', {
     parser: (text) => {
@@ -38,4 +28,4 @@ const bookmarks = defineCollection({
   })
 });
 
-export const collections = { md, dnd, bookmarks };
+export const collections = { md, bookmarks };

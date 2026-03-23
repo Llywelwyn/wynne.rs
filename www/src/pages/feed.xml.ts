@@ -14,7 +14,7 @@ export async function GET(context: APIContext) {
     ...posts.map(post => ({
       title: post.data.title,
       pubDate: post.dates.created,
-      link: `/md/${getSlug(post.id)}`,
+      link: `/${getSlug(post.id)}`,
       description: post.data.title,
     })),
     ...txtFiles.map(txt => ({

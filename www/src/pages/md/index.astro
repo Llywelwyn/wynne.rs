@@ -13,7 +13,7 @@ const { grouped, categories: sortedCategories } = organizePostsByCategory(posts)
 {sortedCategories.map(category => (
 <details open>
   <summary>{category}</summary>
-<pre set:html={grouped[category].map(post => formatListItem(post.dates.created, `/md/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })).join('\n')} />
+<pre set:html={grouped[category].map(post => formatListItem(post.dates.created, `/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })).join('\n')} />
 </details>
 ))}
 </Layout>

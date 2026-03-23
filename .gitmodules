@@ -1,3 +1,0 @@
-[submodule "www/src/content"]
-	path = www/src/content
-	url = git@github.com:Llywelwyn/wynne.rs-content.git

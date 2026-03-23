@@ -31,7 +31,7 @@ try {
 <details open>
   <summary>{category}</summary>
 <pre set:html={[
-  ...categoryPosts.slice(0, 10).map(post => formatListItem(post.dates.created, `/md/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })),
+  ...categoryPosts.slice(0, 10).map(post => formatListItem(post.dates.created, `/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })),
   ...(categoryPosts.length > 10 ? [`<a href="/md/">+${categoryPosts.length - 10} more</a>`] : [])
 ].join('\n')} />
 </details>
