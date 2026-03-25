@@ -4,7 +4,7 @@ import { z } from 'astro/zod';
 import yaml from 'js-yaml';
 
 const md = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/md' }),
+  loader: glob({ pattern: '**/*.md', base: './content' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date().optional(),
@@ -15,7 +15,7 @@ const md = defineCollection({
 });
 
 const bookmarks = defineCollection({
-  loader: file('./src/content/bookmarks.yaml', {
+  loader: file('./content/bookmarks.yaml', {
     parser: (text) => {
       const data = yaml.load(text) as Array<Record<string, unknown>>;
       return data.map((item, i) => ({ id: String(i), ...item }));
