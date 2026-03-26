@@ -7,6 +7,18 @@ export function escapeHtml(str: string): string {
     .replace(/'/g, '&#039;');
 }
 
+export function excerpt(markdown: string | undefined, maxLen = 160): string {
+  if (!markdown) return '';
+  return markdown
+    .replace(/^#+\s+.*$/gm, '')
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[*_~`]/g, '')
+    .replace(/:[a-z]+\[([^\]]*)\]/g, '$1')
+    .replace(/\n+/g, ' ')
+    .trim()
+    .slice(0, maxLen);
+}
+
 export function formatDate(date: Date): string {
   const d = String(date.getDate()).padStart(2, '0');
   const m = String(date.getMonth() + 1).padStart(2, '0');

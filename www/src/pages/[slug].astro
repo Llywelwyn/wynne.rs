@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import { formatDate, formatListItem } from '../lib/format';
+import { formatDate, formatListItem, excerpt } from '../lib/format';
 import { getSlug, enrichPostWithDates, enrichPostsWithDates, resolveRelatedPosts } from '../lib/md';
 
 export async function getStaticPaths() {
@@ -16,8 +16,9 @@ export async function getStaticPaths() {
 const { post, allPosts } = Astro.props;
 const { Content } = await render(post);
 const related = post.data.related ? resolveRelatedPosts(post.data.related, allPosts) : [];
+const description = excerpt((post as any).body) || undefined;
 ---
-<Layout title={`${post.data.title} - lewis m.w.`}>
+<Layout title={`${post.data.title} - lewis m.w.`} description={description}>
 
 <article>
 <h1>{post.data.title}</h1>

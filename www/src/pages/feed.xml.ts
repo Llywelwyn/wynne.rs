@@ -3,18 +3,7 @@ import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 import { getSlug, enrichPostsWithDates } from '../lib/md';
 import { getTxtFiles } from '../lib/txt';
-
-function excerpt(markdown: string | undefined, maxLen = 160): string {
-  if (!markdown) return '';
-  return markdown
-    .replace(/^#+\s+.*$/gm, '')
-    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/[*_~`]/g, '')
-    .replace(/:[a-z]+\[([^\]]*)\]/g, '$1')
-    .replace(/\n+/g, ' ')
-    .trim()
-    .slice(0, maxLen);
-}
+import { excerpt } from '../lib/format';
 
 export async function GET(context: APIContext) {
   const rawPosts = await getCollection('md');
