@@ -12,11 +12,13 @@ this site is very simple and i've set myself some arbitrary rules for it. i've b
 
 in terms of routes: there's one massive [index](https://wynne.rs) of everything on the site, and each bit of text gets its own page
 
-:right[anything that takes more than a few seconds to read gets a proper page, and the short stuff, like my [cv.txt](https://wynne.rs/cv.txt), is just a plain txt file]
+:right[anything that takes more than a few seconds to read gets a proper page, and the short stuff, like my [cv](https://wynne.rs/cv.txt), is just a plain txt file]
 
 right now, *just* and *has* are params for filtering—[?just=guestbook](https://wynne.rs/?just=guestbook) hides anything not in the guestbook category, and [?has=hello](https://wynne.rs/?has=hello) hides anything not including "hello"—and *do* does some kind of one-off action, like [?do=random](https://wynne.rs/?do=random) which takes you to a random page or [?do=newest](https://wynne.rs/?do=newest) to go to the newest addition
 
+:left[the [manpage](https://wynne.rs/man.txt) exists as an up-to-date reference for search params and their usage]
+
 and that's it. i don't need anything else to archive things i care about
 
-cheers,  
+cheers,
 lewis x

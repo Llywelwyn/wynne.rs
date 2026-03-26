@@ -15,17 +15,19 @@ export function getSlug(postId: string): string {
 }
 
 function getPostFilePath(post: Post): string {
-  return path.join(process.cwd(), 'src/content/md', `${post.id}.md`);
+  return path.join(process.cwd(), 'content', `${post.id}.md`);
 }
 
 export function enrichPostWithDates(post: Post): PostWithDates {
   const filePath = getPostFilePath(post);
   const gitDates = getGitDates(filePath);
+  const created = post.data.date ?? gitDates.created;
+  const updated = post.data.updated ?? gitDates.updated;
   return {
     ...post,
     dates: {
-      created: post.data.date ?? gitDates.created,
-      updated: gitDates.updated,
+      created,
+      updated: updated && updated.getTime() !== created.getTime() ? updated : null,
     },
   };
 }
