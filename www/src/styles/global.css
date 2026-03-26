@@ -104,6 +104,10 @@ section pre {
   white-space: pre-wrap;
 }
 
+.guestbook-entry {
+  display: block;
+}
+
 .guestbook-form {
   margin-top: 0.5rem;
   font-family: monospace;

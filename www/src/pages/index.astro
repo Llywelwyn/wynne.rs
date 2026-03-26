@@ -59,8 +59,8 @@ const urls = [
 <pre class="guestbook-entries" set:html={guestbookEntries.map((e, i) => {
   const prefix = i === 0 ? labelPrefix(SECTIONS.guestbook, `?just=${SECTIONS.guestbook}`) : blankPrefix;
   const nameHtml = e.url ? `<a href="${e.url}"><b>${e.name}</b></a>` : `<b>${e.name}</b>`;
-  return `${prefix}<span class="muted">${formatDate(e.createdAt)}</span>  ${nameHtml} ${e.message}`;
-}).join('\n')} />
+  return `<span class="guestbook-entry" style="padding-left: ${labelWidth + 12}ch; text-indent: -${labelWidth + 12}ch;">${prefix}<span class="muted">${formatDate(e.createdAt)}</span>  ${nameHtml} ${e.message}</span>`;
+}).join('')} />
   <form id="guestbook-form" class="guestbook-form" style={`margin-left: ${labelWidth + 12}ch`}>
     <input type="text" name="name" placeholder="name" required maxlength="100" /><br />
     <input type="text" name="message" placeholder="message" required maxlength="500" /><br />
