@@ -11,7 +11,7 @@ function countWords(text) {
 }
 
 // Count blog posts and their words
-const postsDir = path.join(root, 'src/content/md');
+const postsDir = path.join(root, 'content');
 const posts = fs.existsSync(postsDir)
   ? fs.readdirSync(postsDir).filter(f => f.endsWith('.md'))
   : [];
@@ -35,7 +35,7 @@ for (const txt of txtFiles) {
 }
 
 // Count bookmarks
-const bookmarksFile = path.join(root, 'src/content/bookmarks.yaml');
+const bookmarksFile = path.join(root, 'content/bookmarks.yaml');
 const bookmarks = fs.existsSync(bookmarksFile)
   ? yaml.load(fs.readFileSync(bookmarksFile, 'utf-8')) || []
   : [];
@@ -49,7 +49,7 @@ if (fs.existsSync(guestbookJsonFile)) {
 }
 
 // Calculate totals (excluding stats.txt words for now, we'll add them after generating)
-const totalPages = 1 + 1 + posts.length + 1 + txtFiles.length + 1 + 1; // home, blog index, posts, txt index, txts, bookmarks, guestbook
+const totalPages = 1 + posts.length + txtFiles.length; // home + individual post pages + txt files
 
 // Read template from public/stats.txt and replace placeholders
 const template = fs.readFileSync(path.join(root, 'public/stats.txt'), 'utf-8');
