@@ -24,6 +24,8 @@
     location.replace('/admin');
   }
 
+  if (p.has('compact')) document.documentElement.dataset.compact = '';
+
   var has = p.get('has');
   if (has) {
     document.documentElement.dataset.has = has;

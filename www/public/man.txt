@@ -1,0 +1,46 @@
+WYNNE.RS(7)             Personal Sites Manual             WYNNE.RS(7)
+
+NAME
+       wynne.rs — personal website of lewis m.w.
+
+SYNOPSIS
+       wynne.rs [?just=SECTION] [?has=TERM] [?do=ACTION] [?compact]
+
+DESCRIPTION
+       A personal website limited to some made-up, arbitrary design
+       principles to keep things minimal. An experiment in doing as
+       much as possible with as few distinct routes as I can. As it
+       stands there is an index page with a list of all the content
+       on the site, and a [slug]. Anything interesting is done with
+       search parameters. Rather than a search page or an index for
+       content categories, the queries below can be used. They tend
+       to all modify data classes to show/hide content on the index.
+
+OPTIONS
+       ?just=SECTION
+              Display only the named section.
+
+       ?has=TERM
+              Filter entries to those containing TERM.
+
+       ?do=random
+              Redirect to a random entry.
+
+       ?do=newest
+              Redirect to the most recent entry.
+
+       ?compact
+              Hide section labels and dates.
+
+PUBLIC FILES
+       cv.txt          Curriculum vitae.
+       now.txt         What I'm doing now.
+       changelog.txt   Site changelog. I forget to update this often.
+       stats.txt       Site statistics. Generated at build-time.
+       man.txt         This man page.
+
+SEE ALSO
+       source          https://github.com/llywelwyn/wynne.rs
+
+AUTHOR
+       lewis m.w.      <lewis@wynne.rs>

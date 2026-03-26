@@ -8,10 +8,12 @@ export interface TxtFile {
   name: string;
   date: Date;
   pinned: boolean;
+  description?: string;
 }
 
 export interface TxtConfig {
   pinned?: string[];
+  descriptions?: Record<string, string>;
 }
 
 export function getTxtDir(): string {
@@ -32,12 +34,14 @@ export function getTxtFiles(): TxtFile[] {
   const config = loadTxtConfig();
   const pinnedSet = new Set(config.pinned || []);
 
+  const descriptions = config.descriptions || {};
   const files = fs.readdirSync(txtDir)
     .filter(file => file.endsWith('.txt'))
     .map(name => ({
       name,
       date: getGitLastModifiedDate(path.join(txtDir, name)),
       pinned: pinnedSet.has(name),
+      description: descriptions[name],
     }));
   return sortByPinnedThenDate(files);
 }

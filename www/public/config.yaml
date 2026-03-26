@@ -1,2 +1,8 @@
 pinned:
   - none
+descriptions:
+  cv.txt: curriculum vitae
+  now.txt: what i'm doing now
+  man.txt: manual page
+  changelog.txt: site changelog
+  stats.txt: site statistics

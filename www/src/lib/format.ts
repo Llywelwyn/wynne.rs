@@ -5,15 +5,6 @@ export function formatDate(date: Date): string {
   return `${d}/${m}/${y}`;
 }
 
-export function extractDomain(url: string): string {
-  try {
-    const parsed = new URL(url);
-    return parsed.hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
-}
-
 export function formatListItem(
   date: Date,
   url: string,
@@ -23,7 +14,7 @@ export function formatListItem(
   const pinnedBadge = options?.pinned ? ' [pinned]' : '';
   const suffix = options?.suffix ? ` ${options.suffix}` : '';
   const prefix = options?.prefix ?? '';
-  return `${prefix}<span class="muted">${formatDate(date)}</span>  <a href="${url}">${title}</a>${pinnedBadge}${suffix}`;
+  return `<span class="list-meta">${prefix}<span class="muted">${formatDate(date)}</span>  </span><a href="${url}">${title}</a>${pinnedBadge}${suffix}`;
 }
 
 interface Sortable {

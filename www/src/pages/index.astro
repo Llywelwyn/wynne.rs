@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { getApprovedEntries, type GuestbookEntry } from '../lib/db';
-import { formatDate, extractDomain, formatListItem } from '../lib/format';
+import { formatDate, formatListItem } from '../lib/format';
 import { organizePostsByCategory, getSlug, enrichPostsWithDates } from '../lib/md';
 import { getTxtFiles } from '../lib/txt';
 import { DEFAULT_CATEGORY, SECTIONS, SUBDOMAINS } from '../lib/consts';
@@ -16,6 +16,7 @@ const bookmarks = bookmarksCollection
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const txtFiles = getTxtFiles();
+const txtMaxNameLen = Math.max(...txtFiles.map(f => f.name.replace(/\.txt$/, '').length));
 
 const visibleLabels = [...sortedCategories.filter(c => c !== DEFAULT_CATEGORY), ...Object.values(SECTIONS)];
 const labelWidth = Math.max(...visibleLabels.map(l => l.length));
@@ -48,18 +49,23 @@ const urls = [
 })}
 
 <section data-section={SECTIONS.plaintext}>
-<pre set:html={txtFiles.map((f, i) => formatListItem(f.date, `/${f.name}`, f.name, { pinned: f.pinned, prefix: i === 0 ? labelPrefix(SECTIONS.plaintext, `?just=${SECTIONS.plaintext}`) : blankPrefix })).join('\n')} />
+<pre set:html={txtFiles.map((f, i) => {
+  const name = f.name.replace(/\.txt$/, '');
+  const pad = ' '.repeat(txtMaxNameLen - name.length);
+  const suffix = f.description ? `${pad} <span class="muted">(${f.description})</span>` : undefined;
+  return formatListItem(f.date, `/${f.name}`, name, { pinned: f.pinned, suffix, prefix: i === 0 ? labelPrefix(SECTIONS.plaintext, `?just=${SECTIONS.plaintext}`) : blankPrefix });
+}).join('\n')} />
 </section>
 
 <section data-section={SECTIONS.bookmarks}>
-<pre set:html={bookmarks.map((b, i) => formatListItem(b.data.date, b.data.url, b.data.title, { suffix: `<span class="muted">(${extractDomain(b.data.url)})</span>`, prefix: i === 0 ? labelPrefix(SECTIONS.bookmarks, `?just=${SECTIONS.bookmarks}`) : blankPrefix })).join('\n')} />
+<pre set:html={bookmarks.map((b, i) => formatListItem(b.data.date, b.data.url, b.data.title, { prefix: i === 0 ? labelPrefix(SECTIONS.bookmarks, `?just=${SECTIONS.bookmarks}`) : blankPrefix })).join('\n')} />
 </section>
 
 <section data-section={SECTIONS.guestbook}>
 <pre class="guestbook-entries" set:html={guestbookEntries.map((e, i) => {
   const prefix = i === 0 ? labelPrefix(SECTIONS.guestbook, `?just=${SECTIONS.guestbook}`) : blankPrefix;
   const nameHtml = e.url ? `<a href="${e.url}"><b>${e.name}</b></a>` : `<b>${e.name}</b>`;
-  return `<span class="guestbook-entry" style="padding-left: ${labelWidth + 12}ch; text-indent: -${labelWidth + 12}ch;">${prefix}<span class="muted">${formatDate(e.createdAt)}</span>  ${nameHtml} ${e.message.replace(/\n/g, ' ')}</span>`;
+  return `<span class="guestbook-entry" style="padding-left: ${labelWidth + 12}ch; text-indent: -${labelWidth + 12}ch;"><span class="list-meta">${prefix}<span class="muted">${formatDate(e.createdAt)}</span>  </span>${nameHtml} ${e.message.replace(/\n/g, ' ')}</span>`;
 }).join('')} />
   <form id="guestbook-form" class="guestbook-form" style={`margin-left: ${labelWidth + 12}ch`}>
     <input type="text" name="name" placeholder="name" required maxlength="100" /><br />
