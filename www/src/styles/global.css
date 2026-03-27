@@ -1,6 +1,6 @@
 body {
   box-sizing: border-box;
-  max-width: 38rem;
+  max-width: 48rem;
   margin: 0 auto;
   padding: 1rem;
   text-align: justify;
@@ -102,6 +102,25 @@ section pre {
   margin: 0;
 }
 
+.entry-list {
+  columns: 2 24ch;
+  column-gap: 3ch;
+  font-family: monospace;
+  margin: 0;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 10ch 1fr;
+  break-inside: avoid;
+}
+
+.entry-content {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .guestbook-entries {
   font-family: monospace;
   white-space: pre;
@@ -109,7 +128,7 @@ section pre {
 
 .guestbook-entry {
   display: grid;
-  grid-template-columns: var(--meta-width) 1fr;
+  grid-template-columns: 10ch 1fr;
 }
 
 .guestbook-entry > span:last-child {
@@ -118,11 +137,18 @@ section pre {
 
 .guestbook-form {
   margin-top: 0.5rem;
+  margin-left: 10ch;
   font-family: monospace;
 }
 
 html[data-compact] .list-meta {
   display: none;
+}
+html[data-compact] .entry {
+  display: block;
+}
+html[data-compact] .entry-list {
+  columns: 1;
 }
 html[data-compact] .guestbook-entry {
   display: block;

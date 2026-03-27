@@ -31,11 +31,10 @@
     document.documentElement.dataset.has = has;
     has = has.toLowerCase();
     document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('section[data-section] pre').forEach(function(pre) {
-        var lines = pre.innerHTML.split('\n');
-        pre.innerHTML = lines.filter(function(line) {
-          return !line.trim() || line.toLowerCase().indexOf(has) !== -1;
-        }).join('\n');
+      document.querySelectorAll('section[data-section] .entry').forEach(function(entry) {
+        if (entry.textContent.toLowerCase().indexOf(has) === -1) {
+          entry.style.display = 'none';
+        }
       });
       document.querySelectorAll('.guestbook-entry').forEach(function(entry) {
         if (entry.textContent.toLowerCase().indexOf(has) === -1) {

@@ -16,13 +16,6 @@ const bookmarks = bookmarksCollection
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const txtFiles = getTxtFiles();
-const txtMaxNameLen = Math.max(...txtFiles.map(f => f.name.replace(/\.txt$/, '').length));
-
-const visibleLabels = [...sortedCategories.filter(c => c !== DEFAULT_CATEGORY), ...Object.values(SECTIONS)];
-const labelWidth = Math.max(...visibleLabels.map(l => l.length));
-const labelPrefix = (label: string, href: string) =>
-  `${' '.repeat(labelWidth - label.length)}<a class="section-label" href="${href}">${label}</a>  `;
-const blankPrefix = ' '.repeat(labelWidth + 2);
 
 let guestbookEntries: GuestbookEntry[] = [];
 try {
@@ -43,33 +36,38 @@ const urls = [
   const isDefault = category === DEFAULT_CATEGORY;
   return (
 <section data-section={category}>
-<pre set:html={categoryPosts.map((post, i) => formatListItem(post.dates.created, `/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned, prefix: (!isDefault && i === 0) ? labelPrefix(category, `?just=${category}`) : blankPrefix })).join('\n')} />
+{!isDefault && <a class="section-label" href={`?just=${category}`}>{category}</a>}
+<div class="entry-list" set:html={categoryPosts.map(post =>
+  `<span class="entry">${formatListItem(post.dates.created, `/${getSlug(post.id)}`, post.data.title, { pinned: post.data.pinned })}</span>`
+).join('')} />
 </section>
   );
 })}
 
 <section data-section={SECTIONS.plaintext}>
-<pre set:html={txtFiles.map((f, i) => {
+<a class="section-label" href={`?just=${SECTIONS.plaintext}`}>{SECTIONS.plaintext}</a>
+<div class="entry-list" set:html={txtFiles.map(f => {
   const name = f.name.replace(/\.txt$/, '');
-  const pad = ' '.repeat(txtMaxNameLen - name.length);
-  const suffix = f.description ? `${pad} <span class="muted">(${f.description})</span>` : undefined;
-  return formatListItem(f.date, `/${f.name}`, name, { pinned: f.pinned, suffix, prefix: i === 0 ? labelPrefix(SECTIONS.plaintext, `?just=${SECTIONS.plaintext}`) : blankPrefix });
-}).join('\n')} />
+  return `<span class="entry">${formatListItem(f.date, `/${f.name}`, name, { pinned: f.pinned })}</span>`;
+}).join('')} />
 </section>
 
 <section data-section={SECTIONS.bookmarks}>
-<pre set:html={bookmarks.map((b, i) => formatListItem(b.data.date, b.data.url, b.data.title, { prefix: i === 0 ? labelPrefix(SECTIONS.bookmarks, `?just=${SECTIONS.bookmarks}`) : blankPrefix })).join('\n')} />
+<a class="section-label" href={`?just=${SECTIONS.bookmarks}`}>{SECTIONS.bookmarks}</a>
+<div class="entry-list" set:html={bookmarks.map(b =>
+  `<span class="entry">${formatListItem(b.data.date, b.data.url, b.data.title)}</span>`
+).join('')} />
 </section>
 
 <section data-section={SECTIONS.guestbook}>
-<div class="guestbook-entries" style={`--meta-width: ${labelWidth + 12}ch`} set:html={guestbookEntries.map((e, i) => {
-  const prefix = i === 0 ? labelPrefix(SECTIONS.guestbook, `?just=${SECTIONS.guestbook}`) : blankPrefix;
+<a class="section-label" href={`?just=${SECTIONS.guestbook}`}>{SECTIONS.guestbook}</a>
+<div class="guestbook-entries" set:html={guestbookEntries.map(e => {
   const safeName = escapeHtml(e.name);
   const safeMessage = escapeHtml(e.message.replace(/\n/g, ' '));
   const nameHtml = e.url ? `<a href="${escapeHtml(e.url)}"><b>${safeName}</b></a>` : `<b>${safeName}</b>`;
-  return `<span class="guestbook-entry"><span class="list-meta">${prefix}<span class="muted">${formatDate(e.createdAt)}</span>  </span><span>${nameHtml} ${safeMessage}</span></span>`;
+  return `<span class="guestbook-entry"><span class="list-meta"><span class="muted">${formatDate(e.createdAt)}</span>  </span><span>${nameHtml} ${safeMessage}</span></span>`;
 }).join('')} /></div>
-  <form id="guestbook-form" class="guestbook-form" style={`margin-left: ${labelWidth + 12}ch`}>
+  <form id="guestbook-form" class="guestbook-form">
     <label class="sr-only" for="gb-name">name</label>
     <input id="gb-name" type="text" name="name" placeholder="name" required maxlength="100" /><br />
     <label class="sr-only" for="gb-message">message</label>

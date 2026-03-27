@@ -35,7 +35,7 @@ export function formatListItem(
   const pinnedBadge = options?.pinned ? ' [pinned]' : '';
   const suffix = options?.suffix ? ` ${options.suffix}` : '';
   const prefix = options?.prefix ?? '';
-  return `<span class="list-meta">${prefix}<span class="muted">${formatDate(date)}</span>  </span><a href="${url}">${title}</a>${pinnedBadge}${suffix}`;
+  return `<span class="list-meta">${prefix}<span class="muted">${formatDate(date)}</span></span><span class="entry-content"><a href="${url}">${title}</a>${pinnedBadge}${suffix}</span>`;
 }
 
 interface Sortable {
