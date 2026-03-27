@@ -3,13 +3,12 @@ import { glob, file } from 'astro/loaders';
 import { z } from 'astro/zod';
 import yaml from 'js-yaml';
 
-const md = defineCollection({
+const posts = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './content' }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
     updated: z.coerce.date().optional(),
-    pinned: z.boolean().optional(),
     category: z.string().optional(),
     related: z.array(z.string()).optional(),
   })

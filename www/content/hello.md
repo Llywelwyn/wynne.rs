@@ -1,7 +1,6 @@
 ---
 title: hello
 date: 2023-02-26
-pinned: true
 ---
 
 i've always had some sort of homepage. it was originally on bebo, then that died and i didn't ever get into other social media, so i made a website

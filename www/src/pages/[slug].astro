@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import { formatDate, formatListItem, excerpt } from '../lib/format';
+import { formatDate, formatListItem, excerpt, wordCount } from '../lib/format';
 import { getSlug, resolveRelatedPosts, type Post } from '../lib/md';
 
 export async function getStaticPaths() {
@@ -21,7 +21,7 @@ const description = excerpt((post as Post).body) || undefined;
 
 <article>
 <h1>{post.data.title}</h1>
-<p class="muted" style="margin-top: 0;">{formatDate(post.data.date)}{post.data.updated && ` (updated ${formatDate(post.data.updated)})`}</p>
+<p class="muted" style="margin-top: 0;">{formatDate(post.data.date)}{post.data.updated && ` (updated ${formatDate(post.data.updated)})`} · {wordCount((post as Post).body)}{post.data.category && ` · ${post.data.category}`}</p>
 <Content />
 </article>
 {related.length > 0 && (

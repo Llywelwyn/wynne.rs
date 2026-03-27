@@ -6,12 +6,10 @@ import { sortEntries } from './format';
 export interface TxtFile {
   name: string;
   date: Date;
-  pinned: boolean;
   description?: string;
 }
 
 export interface TxtConfig {
-  pinned?: string[];
   descriptions?: Record<string, string>;
   dates?: Record<string, string>;
 }
@@ -32,7 +30,6 @@ export function getTxtFiles(): TxtFile[] {
   if (!fs.existsSync(txtDir)) return [];
 
   const config = loadTxtConfig();
-  const pinnedSet = new Set(config.pinned || []);
   const descriptions = config.descriptions || {};
   const dates = config.dates || {};
 
@@ -41,7 +38,6 @@ export function getTxtFiles(): TxtFile[] {
     .map(name => ({
       name,
       date: dates[name] ? new Date(dates[name]) : new Date(0),
-      pinned: pinnedSet.has(name),
       description: descriptions[name],
     }));
   return sortEntries(files);

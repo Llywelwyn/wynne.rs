@@ -116,9 +116,25 @@ section pre {
 }
 
 .entry-content {
+  display: flex;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.entry-content > a {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.entry-suffix {
+  flex: 1 10000 0%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  padding-left: 1ch;
 }
 
 .guestbook-entries {
