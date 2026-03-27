@@ -47,9 +47,3 @@ export function getTxtFiles(): TxtFile[] {
   return sortByPinnedThenDate(files);
 }
 
-export function getTxtFileNames(): string[] {
-  const txtDir = getTxtDir();
-  if (!fs.existsSync(txtDir)) return [];
-
-  return fs.readdirSync(txtDir).filter(file => file.endsWith('.txt'));
-}
