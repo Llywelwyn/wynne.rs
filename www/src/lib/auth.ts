@@ -1,29 +1,26 @@
 import { getSession } from 'auth-astro/server';
 
-type Session = { user?: { id?: string; name?: string | null } };
+export type Session = { user?: { id?: string; name?: string | null } };
 
-export function isAdmin(userId: string | undefined): boolean {
-  return userId === import.meta.env.ADMIN_GITHUB_ID;
-}
+export type AuthResult =
+  | { status: 'admin'; session: Session }
+  | { status: 'unauthenticated' }
+  | { status: 'forbidden' }
+  | { status: 'error' };
 
-export async function requireAdminSession(request: Request): Promise<
-  | { session: Session; error: null }
-  | { session: null; error: Response | null }
-> {
+export async function getAdminSession(request: Request): Promise<AuthResult> {
   let session: Session | null;
   try {
     session = await getSession(request);
   } catch {
-    return { session: null, error: new Response('Auth not configured', { status: 500 }) };
+    return { status: 'error' };
   }
 
-  if (!session) {
-    return { session: null, error: null };
+  if (!session) return { status: 'unauthenticated' };
+
+  if (session.user?.id !== import.meta.env.ADMIN_GITHUB_ID) {
+    return { status: 'forbidden' };
   }
 
-  if (!isAdmin(session.user?.id)) {
-    return { session: null, error: new Response('Forbidden', { status: 403 }) };
-  }
-
-  return { session, error: null };
+  return { status: 'admin', session };
 }

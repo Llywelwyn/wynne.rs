@@ -2,13 +2,15 @@
 export const prerender = false;
 
 import { getPendingEntries, type GuestbookEntry } from '../lib/db';
-import { requireAdminSession } from '../lib/auth';
+import { getAdminSession } from '../lib/auth';
 import Layout from '../layouts/Layout.astro';
 import { formatDate } from '../lib/format';
 
-const { session, error } = await requireAdminSession(Astro.request);
-if (error) return error;
-if (!session) return Astro.redirect('/api/auth/signin');
+const auth = await getAdminSession(Astro.request);
+if (auth.status === 'error') return new Response('Auth not configured', { status: 500 });
+if (auth.status === 'unauthenticated') return Astro.redirect('/api/auth/signin');
+if (auth.status !== 'admin') return new Response('Forbidden', { status: 403 });
+const { session } = auth;
 
 let entries: GuestbookEntry[] = [];
 try {
