@@ -98,6 +98,22 @@ html[data-has] .guestbook-form {
   display: none;
 }
 
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 2ch;
+  font-family: monospace;
+}
+
+.header-name {
+  white-space: nowrap;
+}
+
+.header-links {
+  text-align: right;
+}
+
 section pre {
   margin: 0;
 }
