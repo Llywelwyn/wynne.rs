@@ -28,7 +28,18 @@ const { title, description = 'personal website of ' + title, showHeader = true, 
 <body>
 {showHeader && (
 <header>
-  <span class="header-name">{isHome ? <Fragment><span class="home-name">{title}</span><a class="home-name-link" href="/">{title}</a></Fragment> : <a href="/">lewis m.w.</a>}</span><span class="header-links"><a href="mailto:lewis@wynne.rs">mail</a> <a href="https://github.com/llywelwyn">gh</a> <a href="/feed.xml">rss</a> <a href="/sitemap.txt">sitemap</a> <a href="/?do=random">random</a> <a href="/?do=newest">newest</a></span>
+  <span class="header-name">
+    <a href="/">{isHome ? title : 'lewis m.w.'}</a>
+  </span>
+  <span class="header-links">
+    <a href="mailto:lewis@wynne.rs">mail</a>
+    <a href="https://github.com/llywelwyn">gh</a>
+    <a href="/feed.xml">rss</a>
+    <a href="/sitemap.txt">sitemap</a>
+    <a href="/?do=random">random</a>
+    <a href="/?do=newest">newest</a>
+    <a id="find" href="/?has=">find</a>
+  </span>
 </header>
 )}
 <slot />

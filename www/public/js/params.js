@@ -4,8 +4,7 @@
   var just = p.get('just');
   if (just && /^[a-z0-9-]+$/.test(just)) {
     document.documentElement.dataset.just = just;
-    var css = 'section[data-section]:not([data-section="' + just + '"]){display:none}'
-      + ' section[data-section="' + just + '"] .section-label{pointer-events:none;text-decoration:none;color:inherit}';
+    var css = 'section[data-section]:not([data-section="' + just + '"]){display:none}';
     document.head.appendChild(Object.assign(document.createElement('style'), { textContent: css }));
   }
 
@@ -30,7 +29,10 @@
   if (has) {
     document.documentElement.dataset.has = has;
     has = has.toLowerCase();
-    document.addEventListener('DOMContentLoaded', function() {
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    if (has) {
       document.querySelectorAll('section[data-section] .entry').forEach(function(entry) {
         if (entry.textContent.toLowerCase().indexOf(has) === -1) {
           entry.style.display = 'none';
@@ -41,6 +43,22 @@
           entry.style.display = 'none';
         }
       });
+    }
+
+    document.querySelectorAll('.section-label').forEach(function(a) {
+      var link = new URLSearchParams(a.search);
+      p.forEach(function(v, k) { if (!link.has(k)) link.set(k, v); });
+      a.href = '?' + link.toString();
     });
-  }
+
+    var find = document.getElementById('find');
+    if (find) find.addEventListener('click', function(e) {
+      e.preventDefault();
+      var term = prompt('find:');
+      if (!term) return;
+      var q = new URLSearchParams(location.search);
+      q.set('has', term);
+      location.search = q.toString();
+    });
+  });
 }();

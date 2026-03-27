@@ -81,18 +81,6 @@ section {
 }
 
 
-.home-name-link {
-  display: none;
-}
-
-html[data-just] .home-name {
-  display: none;
-}
-
-html[data-just] .home-name-link {
-  display: inline;
-}
-
 html[data-has] .guestbook-form {
   display: none;
 }
