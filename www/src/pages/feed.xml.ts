@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
-import { getSlug } from '../lib/md';
+import { getSlug, type Post } from '../lib/md';
 import { getTxtFiles } from '../lib/txt';
 import { excerpt } from '../lib/format';
 
@@ -14,7 +14,7 @@ export async function GET(context: APIContext) {
       title: post.data.title,
       pubDate: post.data.date,
       link: `/${getSlug(post.id)}`,
-      description: excerpt((post as any).body) || post.data.title,
+      description: excerpt((post as Post).body) || post.data.title,
     })),
     ...txtFiles.map(txt => ({
       title: txt.name,

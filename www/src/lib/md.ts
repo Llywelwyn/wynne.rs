@@ -2,7 +2,7 @@ import type { CollectionEntry } from 'astro:content';
 import { DEFAULT_CATEGORY } from './consts';
 import { sortEntries } from './format';
 
-type Post = CollectionEntry<'md'>;
+export type Post = CollectionEntry<'md'> & { body?: string };
 
 export function getSlug(postId: string): string {
   const parts = postId.split('/');
