@@ -1,11 +1,24 @@
 {
-  "name": "ily",
-  "private": true,
-  "packageManager": "pnpm@10.28.0",
+  "name": "wynne.rs",
+  "type": "module",
   "scripts": {
-    "dev:penfield": "pnpm --filter @ily/penfield dev",
-    "dev:www": "pnpm --filter @ily/www dev",
-    "build:penfield": "pnpm --filter @ily/penfield build",
-    "build:www": "pnpm --filter @ily/www build"
+    "dev": "astro dev --port 4322",
+    "build": "ASTRO_DATABASE_FILE=data/guestbook.db astro build && node scripts/generate-stats.js",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/db": "^0.20.1",
+    "@astrojs/node": "^10.0.4",
+    "@astrojs/rss": "^4.0.18",
+    "astro": "^6.1.3",
+    "js-yaml": "^4.1.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "remark-directive": "^3.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-slug": "^7.0.1",
+    "remark-smartypants": "^3.0.2",
+    "unist-util-visit": "^5.1.0"
   }
 }
