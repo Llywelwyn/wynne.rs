@@ -2,6 +2,5 @@ node_modules
 dist
 .astro
 data
-pnpm-lock.yaml
 **/.env
 CLAUDE.md
