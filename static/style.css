@@ -43,3 +43,13 @@ code {
   padding: 0.1em 0.3em;
   border-radius: 3px;
 }
+
+.anchor {
+  text-decoration: none;
+  margin-right: 0.3em;
+  opacity: 0.3;
+}
+
+.anchor:hover {
+  opacity: 1;
+}
