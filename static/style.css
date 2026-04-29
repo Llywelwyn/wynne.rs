@@ -9,6 +9,10 @@ h1, h2, h3, h4, h5, h6 {
   font-size: inherit;
 }
 
+h3 {
+  font-style: italic;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -47,6 +51,7 @@ code {
 .anchor {
   text-decoration: none;
   margin-right: 0.3em;
+  color: black;
   opacity: 0.3;
 }
 

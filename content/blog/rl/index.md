@@ -25,7 +25,7 @@ It ends up looking something like this. Things change colours slightly as they m
 
 I worked on telepathy too, which ended up having me port [elig's fastfov pseudocode](https://www.roguebasin.com/index.php/Eligloscode) from roguebasin into Rust.
 
-For regular viewsheds I used bracket-lib's symmetric shadowcasting. It's symmetrical, so it's good for viewsheds shared across many entities, but it's also symmetrical, so it's expensive to run. Telepathy doesn't symmetry because it's rare, typically low-range, and very few tiles will ever block it, which is where most issues with assymetry come from in the first place: actors with a shared viewshed being differing distances away from an occluding corner.
+For regular viewsheds I used bracket-lib's symmetric shadowcasting. It's symmetrical, so it's good for viewsheds shared across many entities, but it's also symmetrical, so it's expensive to run. Telepathy doesn't need symmetry because it's rare, typically low-range, and very few tiles will ever block it, which is where most issues with asymmetry come from in the first place: actors with a shared viewshed being differing distances away from an occluding corner.
 
 Here's my implementation. I made it lean with a ray every 4 degrees. With a small viewshed, the lack of precision makes no difference; I still don't miss any tiles, and it's just 4x faster than shooting a ray every 1 degree.
 
@@ -99,7 +99,7 @@ builder.with(DistantExit::new());
 builder.with(RoomBasedSpawner::new());
 ```
 
-Every step is optional, so chains can be as simple or complicated as you want. Some of the steps do enable functionality though: a player wont be able to spawn on a map without a starting position.
+Every step is optional, so chains can be as simple or complicated as you want. Some of the steps do enable functionality though: a player won't be able to spawn on a map without a starting position.
 
 (Making defaults would probably be sensible, like defaulting to a `RandomStartingPosition` if nothing else is given.)
 
@@ -110,7 +110,7 @@ let mut builder = MapBuilder::new(depth, width, height);
 builder.start_with(BspDungeonBuilder::new());
 ```
 
-A blank map gets made with the given dimensions, and starts off with a single step of a binary-space partioning (BSP) algorithm. This splits the map into empty rects. Info about where the rects are is stored in the build data as a list of rooms.
+A blank map gets made with the given dimensions, and starts off with a single step of a binary-space partitioning (BSP) algorithm. This splits the map into empty rects. Info about where the rects are is stored in the build data as a list of rooms.
 
 ```rust
 builder.with(RoomSorter::new(RoomSort::CENTRAL));
@@ -171,7 +171,7 @@ Everything needs an ID and a name; everything else is optional. From the top:
 - `attacks` is an array of attacks the creature has. The treant doesn't have multiattacks, so it just has the one lash.
 - and it has a 0.05 (5%) chance to drop something from the `scrolls` loot table.
 
-Mixing and matching these components and flags is how every single creature is made, so making new creatures is extremely simple. An ogre is pretty similar to this treant, but it has `SMALL_GROUP` instead of large, stronger combat stats across the board, and it loses the green blod and fire weakness.
+Mixing and matching these components and flags is how every single creature is made, so making new creatures is extremely simple. An ogre is pretty similar to this treant, but it has `SMALL_GROUP` instead of large, stronger combat stats across the board, and it loses the green blood and fire weakness.
 
 I thought about a `copy_from` field so I could copy from elsewhere and only specify the things that are different, but I don't like inheritance here. The point is simplicity, not typing out a creature quickly.
 
@@ -237,7 +237,7 @@ for every entity with a speed {
 }
 ```
 
-In my game, `CLOCK_SPEED` is 12, and `TURN_COST` is 36. There's a distinction here between game ticks and turns. A turn is when the clock gains enough energy to take an action: it's increments the turn counter, ticks down effects with a duration, hunger, etc. Multiple game ticks happen within each turn. In my case, that number is three game ticks per turn, because it keeps things fast. If I wanted more incremental stuff to happen between my game turns, or have entities with a speed significantly faster than the clock (Cogmind comes to mind), this could be increased by increasing `TURN_COST`. If it was 120 instead, there'd be 10 game ticks within a single turn of the clock instead. Most mobs have a speed that is the same as the clock.
+In my game, `CLOCK_SPEED` is 12, and `TURN_COST` is 36. There's a distinction here between game ticks and turns. A turn is when the clock gains enough energy to take an action: it increments the turn counter, ticks down effects with a duration, hunger, etc. Multiple game ticks happen within each turn. In my case, that number is three game ticks per turn, because it keeps things fast. If I wanted more incremental stuff to happen between my game turns, or have entities with a speed significantly faster than the clock (Cogmind comes to mind), this could be increased by increasing `TURN_COST`. If it was 120 instead, there'd be 10 game ticks within a single turn of the clock instead. Most mobs have a speed that is the same as the clock.
 
 This is how turn order would play out for three entities:
 - "slow mob" has a speed of 3.
@@ -294,7 +294,7 @@ The entire week is more or less able to be summed up in one image.
 
 There's a side-panel showing everything in the backpack and everything in sight, keyed by glyph, and with names coloured by identification status.
 
-Categories of items each have their own scheme for what "unidentified" looks like: potions are some combination of `adjective colour potion` (*effervescent green potion*), wands are `adjective wand` (*spiked wand*), and scrolls are `GIB BER RISH scroll` (*SH KHAFH scroll*). Identifying something happens on a type of item basis. If you identify one health potion, you'll immediately identify other health potions, and wont have to figure out what they are again. I also added an option of defining one-off obfuscations for special cases, so I can cherry pick out special items to have different schemes.
+Categories of items each have their own scheme for what "unidentified" looks like: potions are some combination of `adjective colour potion` (*effervescent green potion*), wands are `adjective wand` (*spiked wand*), and scrolls are `GIB BER RISH scroll` (*SH KHAFH scroll*). Identifying something happens on a type of item basis. If you identify one health potion, you'll immediately identify other health potions, and won't have to figure out what they are again. I also added an option of defining one-off obfuscations for special cases, so I can cherry pick out special items to have different schemes.
 
 Encumbrance is in too. There are varying levels of overweightness, with the specific boundaries determined by strength, each slowing entities down by roughly 25% per level over unencumbered. It's forgiving, and I'd like to keep it that way. I like how encumbrance tends to function in D&D: everybody can carry plenty of consumables and typical weight items, but heavy armour is extremely heavy, so only strong characters can effectively manage to wield it. It's a soft strength requirement for the heaviest gear; a weak character could wear heavier armour too, but they'd have to stash all their other items to manage to carry the armour they're wearing, or take a speed penalty.
 
@@ -306,7 +306,7 @@ This final week of the sprint was heavy, and not particularly well-programmed. R
 
 I started with character creation. Four ancestries and four classes: human, elf, dwarf, and catfolk, and fighter, rogue, wizard, and villager. Each ancestry grants some intrinsic abilities, like minor telepathy for elves or increased unarmed damage for catfolk, which can never really be lost, unless one were to change ancestry somehow. Class is more temporary: it determines starting stats and inventory, and stat total in general, but any of those things can be tweaked during gameplay. A villager can end up as strong as a fighter, they just start off weak.
 
-Ancestries got added to entity reactions alongside the existing faction system. There's a new table deciding who likes who and who hates who. Humans wont tend to attack other humans, dwarves wont attack other dwarves or gnomes, etc.
+Ancestries got added to entity reactions alongside the existing faction system. There's a new table deciding who likes who and who hates who. Humans won't tend to attack other humans, dwarves won't attack other dwarves or gnomes, etc.
 
 Overall, enemy AI is in a pretty decent place for a short 7 weeks of work. Creatures consider immediate adjacency, followed by their field of vision, and whatever task they were currently working on—like chasing something or fleeing from something—to decide what to react to. Chasing or fleeing tends to take priority over general area vision, so somebody may run into danger, only to start fleeing away from it when they become immediately adjacent to that danger, as that takes priority over their current objective. Along with all of these steps, there's faction and ancestry allegiances.
 
@@ -314,9 +314,9 @@ There's a lot of area to expand this, as there always will be, like alignments o
 
 {{ img(src="7.png", alt="an image showing beatitude mechanics within rust-rl", caption="Beatitude mechanics.") }}
 
-Beatitude got finished off. There's blessed-uncursed-cursed modifiers on items now, in addition to the identification system. Every item spawned has a beatitude, and beatitudes itself function as a sort of identification state.
+Beatitude got finished off. There's blessed-uncursed-cursed modifiers on items now, in addition to the identification system. Every item spawned has a beatitude, and beatitude itself functions as a sort of identification state.
 
-In the image above, you can see that `scroll of identify` has already been figured out. The name is no longer obfuscated gibberish, and there are two uncursed scrolls of identify in the backpack; these two have been specifically found out to be uncursed. There's also a greyed out `scroll of identify` which refuses to stack with the others: it wont stack because while we know the item type, we aren't currently aware if its blessed, uncursed, or cursed.
+In the image above, you can see that `scroll of identify` has already been figured out. The name is no longer obfuscated gibberish, and there are two uncursed scrolls of identify in the backpack; these two have been specifically found out to be uncursed. There's also a greyed out `scroll of identify` which refuses to stack with the others: it won't stack because while we know the item type, we aren't currently aware if it's blessed, uncursed, or cursed.
 
 {{ img(src="2.gif", alt="a gif showing a fireball within rust-rl", caption="A fireball.") }}
 
@@ -330,7 +330,7 @@ It's all extremely modular, and fits well with the data-driven entities. Effects
 
 Finally, returning to telepathy, all the way from week 1.
 
-Usually, elvish telepathy is about three tiles in size. It's enough to see just past a wall if you stand directly beside it; it's good for stealth, and lets you linger around for a while to see if anybody is on the other side of the door you're about to open, but it wont let you see across the map. However, when a telepathic individual loses one of their other senses, their telepathy becomes enhanced. The gif shows off a telepathic elf who is under the effect of blindness, and has a massively increased telepathy viewshed.
+Usually, elvish telepathy is about three tiles in size. It's enough to see just past a wall if you stand directly beside it; it's good for stealth, and lets you linger around for a while to see if anybody is on the other side of the door you're about to open, but it won't let you see across the map. However, when a telepathic individual loses one of their other senses, their telepathy becomes enhanced. The gif shows off a telepathic elf who is under the effect of blindness, and has a massively increased telepathy viewshed.
 
 I think telepathy is a great place to call it. It's one of the first things I did in the first day or two because it's one of my favourite features in Nethack. I wasn't sure if I'd get around to it in a way that satisfied me, but having it function as a combination of all the other different systems put in place over the 2 months I worked on this game, I ended up happy with the outcome.
 
