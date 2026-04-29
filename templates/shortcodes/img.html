@@ -1,0 +1,18 @@
+{% set alt = alt | default(value="") -%}
+{% set caption = caption | default(value="") -%}
+{% set is_gif = src is ending_with(".gif") -%}
+{% set dir = page.relative_path | replace(from="index.md", to="") -%}
+{% set orig = page.permalink ~ src -%}
+<figure>
+  <a href="{{ orig }}">
+    {%- if is_gif %}
+    <img src="{{ orig }}" alt="{{ alt }}" loading="lazy">
+    {%- else %}
+    {%- set img = resize_image(path=dir ~ src, width=1120, op="fit_width", format="webp") %}
+    <img src="{{ img.url }}" alt="{{ alt }}" loading="lazy" width="{{ img.width }}" height="{{ img.height }}">
+    {%- endif %}
+  </a>
+  {%- if caption %}
+  <figcaption>{{ caption }}</figcaption>
+  {%- endif %}
+</figure>

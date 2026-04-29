@@ -1,0 +1,16 @@
+base_url = "https://ily.rs"
+title = "ily.rs"
+compile_sass = false
+build_search_index = false
+generate_feeds = true
+feed_filenames = ["rss.xml"]
+minify_html = false
+
+[markdown]
+
+[markdown.highlighting]
+light_theme = "mono-light"
+dark_theme = "mono-dark"
+extra_themes = ["highlight/mono-light.json", "highlight/mono-dark.json"]
+
+[extra]

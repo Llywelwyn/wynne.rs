@@ -1,5 +1,0 @@
-2026-03-27 - narrower layout (34rem), single-column entries, serif font, smaller muted text
-2026-03-26 - inline section labels, compact layout
-2026-02-07 - related posts !
-2026-01-31 - text files now live at cleaner URLs (/*.txt instead of /txt/*.txt)
-2026-01-23 - hello. we've got the skeleton of something here
