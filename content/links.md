@@ -5,6 +5,9 @@ path = "links"
 +++
 
 <dl>
+  <dt><a href="https://ily.rs/status">ily.rs/status</a></dt>
+  <dd>Uptime for my services, and some others I track.</dd>
+
   <dt><a href="https://textonly.website">textonly.website</a></dt>
   <dd>Collection of text-only personal sites</dd>
 
@@ -13,5 +16,4 @@ path = "links"
 
   <dt><a href="https://nownownow.com">nownownow.com</a></dt>
   <dd>Directory of /now pages</dd>
-
 </dl>
