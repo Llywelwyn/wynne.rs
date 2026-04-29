@@ -9,9 +9,11 @@ I've taken part a few times but didn't share my progress. These are some week-by
 
 I wrote my game in Rust, used [bracket-lib](https://github.com/amethyst/bracket-lib) and data-heavy ECS design, and didn't end up giving it a name. The repo is [here](https://git.ily.rs/lew/rust-rl). The releases can be found on the GitHub mirror.
 
-## Week 1: brogue-like colour offsets and fast_fov
+## Week 1: colours and telepathy
 
 A boring, placeholder map, goblins that attack the player, and field of view.
+
+### colours
 
 I stared at a horrible-looking game for a while as I tried to figure out how to make it look nice using only ASCII. I started with a green-blue hue applied globally, and ended up with a combination of that and brogue-like colour offsets.
 
@@ -22,6 +24,8 @@ I stared at a horrible-looking game for a while as I tried to figure out how to 
 It ends up looking something like this. Things change colours slightly as they move around, which I like.
 
 {{ img(src="1.png", alt="a screenshot of rust-rl showing brogue-like colour offsets", caption="Brogue-like colours.") }}
+
+### telepathy
 
 I worked on telepathy too, which ended up having me port [elig's fastfov pseudocode](https://www.roguebasin.com/index.php/Eligloscode) from roguebasin into Rust.
 
@@ -79,7 +83,7 @@ pub fn tile_blocks_telepathy(tt: TileType) -> bool {
 }
 ```
 
-## Week 2: procgen dungeon maps with chained builders
+## Week 2: chained map builders
 
 Got started with procedural generation and turned walls from `#` to box-drawing characters with a simple bitmask. My maps are made with a chained builder pattern.
 
@@ -143,7 +147,7 @@ Here's what we ended up with on a test run.
 
 {{ img(src="2.png", alt="a screenshot of rust-rl showing a generated map using chained builders", caption="A map generated from chained builders.") }}
 
-## Week 3: data-driven entities and squads of enemies
+## Week 3: data-driven entities
 
 Everything is driven by JSON now. Here's an entity.
 
@@ -175,6 +179,8 @@ Mixing and matching these components and flags is how every single creature is m
 
 I thought about a `copy_from` field so I could copy from elsewhere and only specify the things that are different, but I don't like inheritance here. The point is simplicity, not typing out a creature quickly.
 
+### mob tables
+
 ```json
 "id": "mobs",
 "table": [
@@ -192,6 +198,8 @@ I thought about a `copy_from` field so I could copy from elsewhere and only spec
 ```
 
 There's how my mobs table looks. There's a table like this for everything that can spawn. Mobs are pretty flat because I like how Nethack more or less lets anything spawn anywhere, but items are more atomic for the opposite reason: I like having item spawns be specific to their location or dropping mob.
+
+### squads
 
 Another feature I like, using this same system, is squads of enemies spawning alongside matching features.
 
@@ -274,7 +282,7 @@ fast mob has 0 energy left.
 
 Just as well, the fast mob could roll poorly and gain no extra turns compared to the normal mob in such a short number of game ticks. But over the course of the whole game, it should end up being exactly 33% faster than the normal mob.
 
-## Week 5: week off
+## Week 5: time off
 
 I was busy on week 5. I didn't start anything significant.
 
@@ -286,7 +294,7 @@ I did realise this week that the entity system combined with an extremely free-f
 
 {{ img(src="5.png", alt="a screenshot of rust-rl showing a lamb and a fawn spawned in", caption="A lamb and a fawn.") }}
 
-## Week 6: visuals, backtracking, unids, and encumbrance
+## Week 6: items and UI
 
 The entire week is more or less able to be summed up in one image.
 
@@ -294,13 +302,19 @@ The entire week is more or less able to be summed up in one image.
 
 There's a side-panel showing everything in the backpack and everything in sight, keyed by glyph, and with names coloured by identification status.
 
+### identification
+
 Categories of items each have their own scheme for what "unidentified" looks like: potions are some combination of `adjective colour potion` (*effervescent green potion*), wands are `adjective wand` (*spiked wand*), and scrolls are `GIB BER RISH scroll` (*SH KHAFH scroll*). Identifying something happens on a type of item basis. If you identify one health potion, you'll immediately identify other health potions, and won't have to figure out what they are again. I also added an option of defining one-off obfuscations for special cases, so I can cherry pick out special items to have different schemes.
+
+### encumbrance
 
 Encumbrance is in too. There are varying levels of overweightness, with the specific boundaries determined by strength, each slowing entities down by roughly 25% per level over unencumbered. It's forgiving, and I'd like to keep it that way. I like how encumbrance tends to function in D&D: everybody can carry plenty of consumables and typical weight items, but heavy armour is extremely heavy, so only strong characters can effectively manage to wield it. It's a soft strength requirement for the heaviest gear; a weak character could wear heavier armour too, but they'd have to stash all their other items to manage to carry the armour they're wearing, or take a speed penalty.
 
-## Week 7: character creation
+## Week 7: characters, AI, effects
 
 This final week of the sprint was heavy, and not particularly well-programmed. Refactoring could come later. This week was about getting in all the things I thought were cool in time to show them off and compare with everybody else.
+
+### character creation
 
 {{ img(src="6.png", alt="an image of character creation within rust-rl", caption="Character creation.") }}
 
@@ -308,15 +322,21 @@ I started with character creation. Four ancestries and four classes: human, elf,
 
 Ancestries got added to entity reactions alongside the existing faction system. There's a new table deciding who likes who and who hates who. Humans won't tend to attack other humans, dwarves won't attack other dwarves or gnomes, etc.
 
+### enemy AI
+
 Overall, enemy AI is in a pretty decent place for a short 7 weeks of work. Creatures consider immediate adjacency, followed by their field of vision, and whatever task they were currently working on—like chasing something or fleeing from something—to decide what to react to. Chasing or fleeing tends to take priority over general area vision, so somebody may run into danger, only to start fleeing away from it when they become immediately adjacent to that danger, as that takes priority over their current objective. Along with all of these steps, there's faction and ancestry allegiances.
 
 There's a lot of area to expand this, as there always will be, like alignments or whatever other increasingly-specific factors could exist, like how hungry somebody is determining how likely they are to attack something.
+
+### beatitude
 
 {{ img(src="7.png", alt="an image showing beatitude mechanics within rust-rl", caption="Beatitude mechanics.") }}
 
 Beatitude got finished off. There's blessed-uncursed-cursed modifiers on items now, in addition to the identification system. Every item spawned has a beatitude, and beatitude itself functions as a sort of identification state.
 
 In the image above, you can see that `scroll of identify` has already been figured out. The name is no longer obfuscated gibberish, and there are two uncursed scrolls of identify in the backpack; these two have been specifically found out to be uncursed. There's also a greyed out `scroll of identify` which refuses to stack with the others: it won't stack because while we know the item type, we aren't currently aware if it's blessed, uncursed, or cursed.
+
+### effects
 
 {{ img(src="2.gif", alt="a gif showing a fireball within rust-rl", caption="A fireball.") }}
 
@@ -326,6 +346,8 @@ Each effect gets checked against some conditions to decide if it should be skipp
 
 It's all extremely modular, and fits well with the data-driven entities. Effects are intentionally generic, and combinations of them is what makes things interesting. The same damage and targeting effects used for entities swinging a weapon are used for traps going off or items being used. The gif up above shows off a fireball scroll, which is a damage effect of fire-type that targets an area. I also made mass-healing, mass-confusion, and some other AOE scrolls now that it was easy to do so.
 
+### telepathy
+
 {{ img(src="3.gif", alt="a gif showing telepathy within rust-rl", caption="Telepathy.") }}
 
 Finally, returning to telepathy, all the way from week 1.
@@ -334,7 +356,7 @@ Usually, elvish telepathy is about three tiles in size. It's enough to see just 
 
 I think telepathy is a great place to call it. It's one of the first things I did in the first day or two because it's one of my favourite features in Nethack. I wasn't sure if I'd get around to it in a way that satisfied me, but having it function as a combination of all the other different systems put in place over the 2 months I worked on this game, I ended up happy with the outcome.
 
-## Week 8
+## Week 8: morgue files
 
 This week was for showing off. I finished off the remnants of morgue files. In the WASM build, they go to the console, otherwise they get saved to disk. Here's one from a run where I died more or less instantly.
 
