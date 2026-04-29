@@ -1,5 +1,5 @@
 base_url = "https://ily.rs"
-title = "ily.rs"
+title = "ily"
 compile_sass = false
 build_search_index = false
 generate_feeds = true
