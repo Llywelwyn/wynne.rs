@@ -22,4 +22,8 @@ Tanner's site. [My guestbook](/g) started off as a Rust port of [his](https://t0
 Directory of /now pages
 {% end %}
 
+{% link(href="https://coldscars.smol.pub", title="coldscars") %}
+A Finnish poet's website.
+{% end %}
+
 </dl>
