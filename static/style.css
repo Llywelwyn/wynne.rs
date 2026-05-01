@@ -35,17 +35,14 @@ figcaption {
 pre {
   max-width: 100%;
   overflow-x: auto;
+}
+
+pre:has(> code) {
   padding: 0.75rem 1rem;
-  border-radius: 4px;
 }
 
 code {
   font-size: 0.95em;
-}
-
-:not(pre) > code {
-  padding: 0.1em 0.3em;
-  border-radius: 3px;
 }
 
 .anchor {
