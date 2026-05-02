@@ -11,7 +11,7 @@
 <span class="muted">{{ post.date }}</span>&emsp;<a href="{{ post.permalink }}">{{ post.title }}</a><br>
 {% endfor %}
 
-<p>Reading</p>
+<h2>Reading</h2>
 
 {% set reading = get_section(path="reading/_index.md") %}
 {% for post in reading.pages %}

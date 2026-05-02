@@ -4,21 +4,49 @@
 
 body {
   max-width: 70ch;
-  line-height: 1.3;
-  margin: 0;
-  padding: 1rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  line-height: 1.5;
+  font-family: Georgia, "Iowan Old Style", Palatino, serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-size: inherit;
+  margin: 1.5rem 0 0.5rem;
 }
 
-dt:not(:first-child) {
-  margin-top: 0.3rem;
+h1 {
+  margin: 0 0 1.5rem;
 }
 
 h3 {
   font-style: italic;
+  font-weight: normal;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  color: var(--muted);
+}
+
+nav {
+  margin-bottom: 2rem;
+  color: var(--muted);
+}
+
+dt:not(:first-child) {
+  margin-top: 0.5rem;
+}
+
+dd {
+  margin: 0;
 }
 
 img {
@@ -34,8 +62,8 @@ figure {
 }
 
 figcaption {
-  font-size: 0.9em;
   font-style: italic;
+  color: var(--muted);
   margin-top: 0.4rem;
   text-align: center;
 }
@@ -49,30 +77,31 @@ pre:has(> code) {
   padding: 0.75rem 1rem;
 }
 
-code {
-  font-size: 0.95em;
-}
-
-.anchor {
-  text-decoration: none;
-  margin-right: 0.3em;
-  color: black;
-  opacity: 0.3;
-}
-
-.anchor:hover {
-  opacity: 1;
+hr {
+  border: 0;
+  border-top: 1px solid var(--muted);
+  margin: 2rem 0;
 }
 
 .muted {
   color: var(--muted);
 }
 
+.anchor {
+  text-decoration: none;
+  margin-right: 0.3em;
+  color: var(--muted);
+}
+
+.anchor:hover {
+  color: black;
+}
+
 .notes {
   display: grid;
   grid-template-columns: minmax(2.5rem, min-content) 1fr;
   gap: 0.5rem 0.75rem;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
 }
 
 .notes .meta {
