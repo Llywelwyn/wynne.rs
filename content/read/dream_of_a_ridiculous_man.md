@@ -3,7 +3,7 @@ title = "The Dream of a Ridiculous Man (1877) by Fyodor Dostoevsky"
 date = 2026-05-02
 +++
 
-All of Dostoevsky's quintessential themes fit into less than 30 pages, and extremely accessible. Page for page, one of my favourite pieces of writing ever.
+Page for page, one of my favourite pieces of writing ever.
 
 <div class="notes">
 
