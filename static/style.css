@@ -83,6 +83,11 @@ hr {
   margin: 2rem 0;
 }
 
+mark {
+  background: #f4ecc2;
+  padding: 0.1em 0.2em;
+}
+
 .muted {
   color: var(--muted);
 }
