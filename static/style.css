@@ -123,3 +123,13 @@ mark {
   text-align: right;
   font-style: italic;
 }
+
+.notes--glossary {
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1.5rem;
+}
+
+.notes--glossary .meta {
+  color: black;
+  font-style: italic;
+}
